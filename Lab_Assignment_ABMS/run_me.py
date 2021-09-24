@@ -160,6 +160,7 @@ t= 0
 id_1 = 1
 id_2 = 51
 print("Simulation Started")
+t_list = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45]
 while running:
     t= round(t,2)
     
@@ -184,15 +185,15 @@ while running:
         
       
     #Spawn aircraft for this timestep (use for example a random process)
-    
-    ac = Aircraft(id_1, 'A', random.choice((37,38)),random.choice((97,34, 35,36,98)),t, nodes_dict)
-    ac1 = Aircraft(id_2, 'D', random.choice((97,34,35,36,98)),random.choice((1,2)),t, nodes_dict)
+    if t in t_list:
+        ac = Aircraft(id_1, 'A', random.choice((37,38)),random.choice((97,34, 35,36,98)),t, nodes_dict)
+        ac1 = Aircraft(id_2, 'D', random.choice((97,34,35,36,98)),random.choice((1,2)),t, nodes_dict)
 
-    aircraft_lst.append(ac)
-    aircraft_lst.append(ac1)
+        aircraft_lst.append(ac)
+        aircraft_lst.append(ac1)
 
-    id_1 += 1
-    id_2 += 1
+        id_1 += 1
+        id_2 += 1
 
 
     
