@@ -21,7 +21,7 @@ nodes_file = "nodes.xlsx" #xlsx file with for each node: id, x_pos, y_pos, type
 edges_file = "edges.xlsx" #xlsx file with for each edge: from  (node), to (node), length
 
 #Parameters that can be changed:
-simulation_time = 20
+simulation_time = 50
 planner = "Independent" #choose which planner to use (currently only Independent is implemented)
 
 #Visualization (can also be changed)
@@ -155,12 +155,14 @@ running=True
 escape_pressed = False
 time_end = simulation_time
 dt = 0.5 #should be factor of 0.5 (0.5/dt should be integer)
-t= 0
 clock = pg.time.Clock()
-
+t= 0
+id_1 = 1
+id_2 = 51
 print("Simulation Started")
 while running:
-    t= round(t,2)    
+    t= round(t,2)
+    
        
     #Check conditions for termination
     if t >= time_end or escape_pressed: 
@@ -179,29 +181,22 @@ while running:
                                          "heading": ac.heading}
         escape_pressed = map_running(map_properties, current_states, t)
         timer.sleep(visualization_speed)
-        clock.tick(30)
+        
       
     #Spawn aircraft for this timestep (use for example a random process)
-    for t in range(10,19,1):   
-        ac = Aircraft(t+1, 'A', 37,random.choice((97,34, 35,36,98)),t, nodes_dict)
-        ac1 = Aircraft(t+2, 'A', 38,random.choice((97,34, 35,36,98)),t, nodes_dict)#As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
-        ac2 = Aircraft(t+3, 'D', 97,random.choice((37,38)),t, nodes_dict)#As an example we will create one aicraft arriving at node 36 with the goal of reaching node 37
-        ac3 = Aircraft(t+4, 'D', 34,random.choice((37,38)),t, nodes_dict)
-        ac4 = Aircraft(t+5, 'D', 35,random.choice((37,38)),t, nodes_dict)
-        ac5 = Aircraft(t+6, 'D', 36,random.choice((37,38)),t, nodes_dict)
-        ac6 = Aircraft(t+7, 'D', 98,random.choice((37,38)),t, nodes_dict)
-        aircraft_lst.append(ac)
-        aircraft_lst.append(ac1)
-        aircraft_lst.append(ac2)
-        aircraft_lst.append(ac3)
-        aircraft_lst.append(ac4)
-        aircraft_lst.append(ac5)
-        aircraft_lst.append(ac6)
+    
+    ac = Aircraft(id_1, 'A', random.choice((37,38)),random.choice((97,34, 35,36,98)),t, nodes_dict)
+    ac1 = Aircraft(id_2, 'D', random.choice((97,34,35,36,98)),random.choice((1,2)),t, nodes_dict)
 
-        
+    aircraft_lst.append(ac)
+    aircraft_lst.append(ac1)
+
+    id_1 += 1
+    id_2 += 1
+
+
     
     
-        
     #Do planning 
     if planner == "Independent":     
         #if t == 1: #(Hint: Think about the condition that triggers (re)planning) 
