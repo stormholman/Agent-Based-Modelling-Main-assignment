@@ -1,7 +1,7 @@
 """
 Run-me.py is the main file of the simulation. Run this file to run the simulation.
 """
-
+import random
 import os
 import pandas as pd
 import networkx as nx
@@ -21,13 +21,13 @@ nodes_file = "nodes.xlsx" #xlsx file with for each node: id, x_pos, y_pos, type
 edges_file = "edges.xlsx" #xlsx file with for each edge: from  (node), to (node), length
 
 #Parameters that can be changed:
-simulation_time = 10
+simulation_time = 20
 planner = "Independent" #choose which planner to use (currently only Independent is implemented)
 
 #Visualization (can also be changed)
 plot_graph = False    #show graph representation in NetworkX
 visualization = True        #pygame visualization
-visualization_speed = 0.1  #set at 0.1 as default
+visualization_speed = 0.1 #set at 0.1 as default
 
 #%%Function definitions
 def import_layout(nodes_file, edges_file):
@@ -154,8 +154,9 @@ if visualization:
 running=True
 escape_pressed = False
 time_end = simulation_time
-dt = 0.1 #should be factor of 0.5 (0.5/dt should be integer)
+dt = 0.5 #should be factor of 0.5 (0.5/dt should be integer)
 t= 0
+clock = pg.time.Clock()
 
 print("Simulation Started")
 while running:
@@ -177,19 +178,34 @@ while running:
                                          "xy_pos": ac.position,
                                          "heading": ac.heading}
         escape_pressed = map_running(map_properties, current_states, t)
-        timer.sleep(visualization_speed) 
+        timer.sleep(visualization_speed)
+        clock.tick(30)
       
     #Spawn aircraft for this timestep (use for example a random process)
-    if t == 1:    
-        ac = Aircraft(1, 'A', 37,36,t, nodes_dict) #As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
-        ac1 = Aircraft(2, 'D', 36,37,t, nodes_dict)#As an example we will create one aicraft arriving at node 36 with the goal of reaching node 37
+    for t in range(10,19,1):   
+        ac = Aircraft(t+1, 'A', 37,random.choice((97,34, 35,36,98)),t, nodes_dict)
+        ac1 = Aircraft(t+2, 'A', 38,random.choice((97,34, 35,36,98)),t, nodes_dict)#As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
+        ac2 = Aircraft(t+3, 'D', 97,random.choice((37,38)),t, nodes_dict)#As an example we will create one aicraft arriving at node 36 with the goal of reaching node 37
+        ac3 = Aircraft(t+4, 'D', 34,random.choice((37,38)),t, nodes_dict)
+        ac4 = Aircraft(t+5, 'D', 35,random.choice((37,38)),t, nodes_dict)
+        ac5 = Aircraft(t+6, 'D', 36,random.choice((37,38)),t, nodes_dict)
+        ac6 = Aircraft(t+7, 'D', 98,random.choice((37,38)),t, nodes_dict)
         aircraft_lst.append(ac)
         aircraft_lst.append(ac1)
+        aircraft_lst.append(ac2)
+        aircraft_lst.append(ac3)
+        aircraft_lst.append(ac4)
+        aircraft_lst.append(ac5)
+        aircraft_lst.append(ac6)
+
+        
+    
+    
         
     #Do planning 
     if planner == "Independent":     
-        if t == 1: #(Hint: Think about the condition that triggers (re)planning) 
-            run_independent_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t)
+        #if t == 1: #(Hint: Think about the condition that triggers (re)planning) 
+        run_independent_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t)
     elif planner == "Prioritized":
         run_prioritized_planner()
     elif planner == "CBS":
