@@ -21,13 +21,13 @@ nodes_file = "nodes.xlsx" #xlsx file with for each node: id, x_pos, y_pos, type
 edges_file = "edges.xlsx" #xlsx file with for each edge: from  (node), to (node), length
 
 #Parameters that can be changed:
-simulation_time = 50
+simulation_time = 20
 planner = "Independent" #choose which planner to use (currently only Independent is implemented)
 
 #Visualization (can also be changed)
 plot_graph = False    #show graph representation in NetworkX
 visualization = True        #pygame visualization
-visualization_speed = 0.1 #set at 0.1 as default
+visualization_speed = 0.5 #set at 0.1 as default
 
 #%%Function definitions
 def import_layout(nodes_file, edges_file):
@@ -156,13 +156,13 @@ escape_pressed = False
 time_end = simulation_time
 dt = 0.5 #should be factor of 0.5 (0.5/dt should be integer)
 clock = pg.time.Clock()
-t= 0
-id_1 = 1
-id_2 = 51
+t = 0
+id_a = 1
+id_d = 1
 print("Simulation Started")
-t_list = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45]
+t_list = [1,2,3,4,5,6,7,8,9,10]
 while running:
-    t= round(t,2)
+    t = round(t,2)
     
        
     #Check conditions for termination
@@ -186,17 +186,17 @@ while running:
       
     #Spawn aircraft for this timestep (use for example a random process)
     if t in t_list:
-        ac = Aircraft(id_1, 'A', random.choice((37,38)),random.choice((97,34, 35,36,98)),t, nodes_dict)
-        ac1 = Aircraft(id_2, 'D', random.choice((97,34,35,36,98)),random.choice((1,2)),t, nodes_dict)
 
-        aircraft_lst.append(ac)
-        aircraft_lst.append(ac1)
+        ac_a = Aircraft(f'a{id_a}', 'A', random.choice((37,38)),random.choice((97,34, 35,36,98)),t , nodes_dict)
+        ac_d = Aircraft(f'd{id_d}', 'D', random.choice((97,34,35,36,98)),random.choice((1,2)),t , nodes_dict)
 
-        id_1 += 1
-        id_2 += 1
-
-
-    
+        ac = random.choice((1,2))
+        if ac == 1:
+            aircraft_lst.append(ac_a)
+            id_a += 1
+        else:
+            aircraft_lst.append(ac_d)
+            id_d += 1
     
     #Do planning 
     if planner == "Independent":     
