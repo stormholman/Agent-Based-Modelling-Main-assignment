@@ -83,12 +83,14 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
             return True, get_path(curr)
         
         for neighbor in nodes_dict[curr['loc']]["neighbors"]:
-
+            # print('neighbor', neighbor)
+            # print('currloc', curr['loc'])
             # implement constraints here!!
-            print('currloc', curr['loc'])
-            print('nextloc', neighbor)
+            # print('currloc', curr['loc'])
+            # print('nextloc', neighbor)
             print('currtime',curr['timestep'])
-            if is_constrained(curr['loc'], neighbor, curr['timestep'] + 1, constraint_table):
+            # print('timestep,curr['timestep'])
+            if is_constrained(curr['loc'], neighbor, curr['timestep']+0.5, constraint_table):
                 continue
 
             child = {'loc': neighbor,

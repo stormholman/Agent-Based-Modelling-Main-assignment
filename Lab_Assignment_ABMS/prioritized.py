@@ -24,17 +24,33 @@ def is_constrained(curr_loc, next_loc, next_time, constraint_table):
     #               any given constraint. For efficiency the constraints are indexed in a constraint_table
     #               by time step, see build_constraint_table.
     #curr_loc: just node, next_loc: just node, next_time: just time
-
+    # curr_loc = [curr_loc]
+    # next_loc = [next_loc]
+    # if next_time not in constraint_table:
+    #     return False
+    # for i in constraint_table[next_time]:
+    #     i = [i]
+    #     if len(i) == 1:  #edge constraint
+    #     if i == next_loc:
+    #         return True
+    #     elif i == [curr_loc, next_loc]: #vertex constraint
+    #         return True
+    # return False
+    print('nextloc', next_loc)
     if next_time not in constraint_table:
+        # print('nxtt in constrtabkle', True)
         return False
-    for i in constraint_table[next_time]:
-        if len(i) == 1:  #edge constraint
-            print('i', i, len(i))
-        if i == next_loc:
+    if len(constraint_table[next_time]) == 1:
+        if constraint_table[next_time][0] == next_loc:
+            # print('is constrained', next_loc)
+            print('is constrained', True)
             return True
-        elif i == [curr_loc, next_loc]: #vertex constraint
+    if len(constraint_table[next_time]) == 2:
+        if constraint_table[next_time][0] == curr_loc and constraint_table[next_time][1] == next_loc:
             return True
     return False
+
+
 
 def run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t):
     for ac in aircraft_lst:
