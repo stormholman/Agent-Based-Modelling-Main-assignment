@@ -5,7 +5,7 @@ Consider functions in this file as supporting functions.
 
 import heapq
 import networkx as nx
-
+from prioritized import build_constraint_table
 def calc_heuristics(graph, nodes_dict):
     """
     Calculates the exact heuristic dict (shortest distance between two nodes) to be used in A* search.
@@ -66,7 +66,8 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
     from_node_id = from_node
     goal_node_id = goal_node
     time_start = time_start
-    
+    # constraint_table = build_constraint_table(constraints, agent)
+
     open_list = []
     closed_list = dict()
     earliest_goal_timestep = time_start
@@ -80,6 +81,10 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
             return True, get_path(curr)
         
         for neighbor in nodes_dict[curr['loc']]["neighbors"]:
+
+            #implement constraints here!!
+
+
             child = {'loc': neighbor,
                     'g_val': curr['g_val'] + 0.5,
                     'h_val': heuristics[neighbor][goal_node_id],

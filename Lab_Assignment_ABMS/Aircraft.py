@@ -1,5 +1,6 @@
 from single_agent_planner import simple_single_agent_astar
 import math
+import time as timer
 
 class Aircraft(object):
     """Aircraft class, should be used in the creation of new aircraft."""
@@ -133,6 +134,43 @@ class Aircraft(object):
                 raise Exception("Something is wrong with the timing of the path planning")
 
     
+    def plan_prioritized(self, nodes_dict, edges_dict, heuristics, t):
+        """
+        Plans a prioritized path for taxiing aircraft assuming that it knows the entire layout.
+        Other traffic is taken into account.
+        INPUT:
+            - nodes_dict: copy of the nodes_dict
+            - edges_dict: edges_dict with current edge weights
+        """
+        start_time = timer.time()
+        result = []
+        constraints = []
+        # constraints = [{'agent': 1, 'loc': [(1, 4)], 'timestep': 2},
+        #                {'agent': 1, 'loc': [(1, 3), (1, 2)], 'timestep': 2}]
+        self.num_of_agents = 2
+        if self.status == "taxiing":
+            start_node = self.start  # node from which planning should be done
+            goal_node = self.goal  # node to which planning should be done
+            for agent in range(self.num_of_agents):  # Find path for each agent
+                success, path = simple_single_agent_astar(nodes_dict, start_node, goal_node, heuristics, t, agent, constraints)
+                # print('path is ', path)
+                if path is None:
+                    raise BaseException('No solutions')
+                result.append(path)
 
+            if success:
+                self.path_to_goal = path[1:]
+                next_node_id = self.path_to_goal[0][0]  # next node is first node in path_to_goal
+                self.from_to = [path[0][0], next_node_id]
+                print("Path AC", self.id, ":", path)
+            else:
+                raise Exception("No solution found for", self.id)
 
-                
+            # Check the path
+            if path[0][1] != t:
+                raise Exception("Something is wrong with the timing of the path planning")
+
+        self.CPU_time = timer.time() - start_time
+        print("CPU time (s):    {:.2f}".format(self.CPU_time))
+        return result
+
