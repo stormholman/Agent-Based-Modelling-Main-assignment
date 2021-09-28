@@ -10,11 +10,12 @@ def build_constraint_table(constraints, agent):
     #               is_constrained function.
     constraint_table = {}
     for i in constraints:
+        print('constraint', i)
         if agent == i['aircraft']:
-            if i['timestep'] in constraint_table.keys():
+            if i['timestep'] in constraint_table:
                 constraint_table[i['timestep']].append(i['node'])
             else:
-                constraint_table[i['timestep']] = i['node']
+                constraint_table[i['timestep']] = [i['node']]
     print('constraint_table', constraint_table)
     return constraint_table
 
@@ -24,36 +25,25 @@ def is_constrained(curr_loc, next_loc, next_time, constraint_table):
     #               any given constraint. For efficiency the constraints are indexed in a constraint_table
     #               by time step, see build_constraint_table.
     #curr_loc: just node, next_loc: just node, next_time: just time
-    # curr_loc = [curr_loc]
-    # next_loc = [next_loc]
-    # if next_time not in constraint_table:
-    #     return False
-    # for i in constraint_table[next_time]:
-    #     i = [i]
-    #     if len(i) == 1:  #edge constraint
-    #     if i == next_loc:
-    #         return True
-    #     elif i == [curr_loc, next_loc]: #vertex constraint
-    #         return True
-    # return False
-    print('nextloc', next_loc)
     if next_time not in constraint_table:
         # print('nxtt in constrtabkle', True)
         return False
-    if len(constraint_table[next_time]) == 1:
-        if constraint_table[next_time][0] == next_loc:
-            # print('is constrained', next_loc)
-            print('is constrained', True)
-            return True
-    if len(constraint_table[next_time]) == 2:
-        if constraint_table[next_time][0] == curr_loc and constraint_table[next_time][1] == next_loc:
-            return True
+    constraintsarr = constraint_table[next_time]
+    for i in range(len(constraintsarr)):         #if the timestep is in the constraint_table, then we check the loc
+        constraint = constraintsarr[i]
+        if len(constraint) == 1:   #if the length of the loc is 1, then it is edge constraint
+            if constraint[0] == next_loc:
+                return True
+        elif len(constraint) == 2:      #if the length of the loc is 2, then it is vertex constraint
+            if constraint[0] == curr_loc and constraint[1] == next_loc:
+                return True
     return False
 
 
-
 def run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t):
+    # print('alist', aircraft_lst)
     for ac in aircraft_lst:
+        # print('ac', ac)
         if ac.spawntime == t:
             ac.status = "taxiing"
             ac.position = nodes_dict[ac.start]["xy_pos"]
