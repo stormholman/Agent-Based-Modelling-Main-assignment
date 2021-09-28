@@ -8,30 +8,32 @@ def build_constraint_table(constraints, agent):
     #               the given agent for each time step. The table can be used
     #               for a more efficient constraint violation check in the
     #               is_constrained function.
-    constrainttable = {}
+    constraint_table = {}
     for i in constraints:
-        if agent == i['agent']:
-            if i['timestep'] in constrainttable.keys():
-                constrainttable[i['timestep']].append(i['loc'])
+        if agent == i['aircraft']:
+            if i['timestep'] in constraint_table.keys():
+                constraint_table[i['timestep']].append(i['loc'])
             else:
-                constrainttable[i['timestep']] = [i['loc']]
+                constraint_table[i['timestep']] = [i['loc']]
+    print('constraint_table', constraint_table)
+    return constraint_table
 
-    return constrainttable
-
-def is_constrained(curr_loc, next_loc, next_time, constrainttable):
+def is_constrained(curr_loc, next_loc, next_time, constraint_table):
     ##############################
     # Task 1.2/1.3: Check if a move from curr_loc to next_loc at time step next_time violates
     #               any given constraint. For efficiency the constraints are indexed in a constraint_table
     #               by time step, see build_constraint_table.
-    if next_time not in constrainttable:
+    if next_time not in constraint_table:
         return False
-    for i in constrainttable[next_time]:
+    for i in constraint_table[next_time]:
         if len(i) == 1:  #edge constraint
             # print('i', i, len(i))
             if i == [next_loc]:
                 return True
         elif i == [curr_loc, next_loc]: #vertex constraint
+            print('is_constraint', True)
             return True
+    print('is_constraint', False)
     return False
 
 def run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t):

@@ -6,6 +6,8 @@ Consider functions in this file as supporting functions.
 import heapq
 import networkx as nx
 from prioritized import build_constraint_table
+from prioritized import is_constrained
+
 def calc_heuristics(graph, nodes_dict):
     """
     Calculates the exact heuristic dict (shortest distance between two nodes) to be used in A* search.
@@ -47,7 +49,7 @@ def heuristicFinder(graph, start_node, goal_node):
     return path, path_length
 
 
-def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time_start):
+def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time_start, agent, constraints):
     # def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
     """
     Single agent A* search. Time start can only be the time that an agent is at a node.
@@ -66,7 +68,7 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
     from_node_id = from_node
     goal_node_id = goal_node
     time_start = time_start
-    # constraint_table = build_constraint_table(constraints, agent)
+    constraint_table = build_constraint_table(constraints, agent)
 
     open_list = []
     closed_list = dict()
@@ -83,7 +85,8 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
         for neighbor in nodes_dict[curr['loc']]["neighbors"]:
 
             #implement constraints here!!
-
+            if is_constrained(curr['loc'], neighbor, curr['timestep'] + 1, constraint_table):
+                continue
 
             child = {'loc': neighbor,
                     'g_val': curr['g_val'] + 0.5,

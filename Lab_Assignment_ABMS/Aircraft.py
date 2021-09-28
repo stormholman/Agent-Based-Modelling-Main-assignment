@@ -145,8 +145,8 @@ class Aircraft(object):
         start_time = timer.time()
         result = []
         constraints = []
-        # constraints = [{'agent': 1, 'loc': [(1, 4)], 'timestep': 2},
-        #                {'agent': 1, 'loc': [(1, 3), (1, 2)], 'timestep': 2}]
+        constraints = [{'aircraft': 1, 'loc': [(4.0, 3.0)], 'timestep': 5.0}]
+
         self.num_of_agents = 2
         if self.status == "taxiing":
             start_node = self.start  # node from which planning should be done

@@ -22,7 +22,7 @@ edges_file = "edges.xlsx" #xlsx file with for each edge: from  (node), to (node)
 
 #Parameters that can be changed:
 simulation_time = 20
-planner = "Independent" #choose which planner to use (currently only Independent is implemented)
+planner = "Prioritized" #choose which planner to use (currently only Independent is implemented)
 
 #Visualization (can also be changed)
 plot_graph = False    #show graph representation in NetworkX
@@ -157,8 +157,8 @@ time_end = simulation_time
 dt = 0.5 #should be factor of 0.5 (0.5/dt should be integer)
 clock = pg.time.Clock()
 t = 0
-id_a = 1
-id_d = 1
+id = 1
+
 print("Simulation Started")
 t_list = [1,2,3,4,5,6,7,8,9,10]
 while running:
@@ -185,25 +185,33 @@ while running:
         
       
     #Spawn aircraft for this timestep (use for example a random process)
-    if t in t_list:
+    # if t in t_list:
 
-        ac_a = Aircraft(f'a{id_a}', 'A', random.choice((37,38)),random.choice((97,34, 35,36,98)),t , nodes_dict)
-        ac_d = Aircraft(f'd{id_d}', 'D', random.choice((97,34,35,36,98)),random.choice((1,2)),t , nodes_dict)
+        # ac_a = Aircraft(f'a{id_a}', 'A', random.choice((37,38)),random.choice((97,34, 35,36,98)),t , nodes_dict)
+        # ac_d = Aircraft(f'd{id_d}', 'D', random.choice((97,34,35,36,98)),random.choice((1,2)),t , nodes_dict)
+        #
+        # ac = random.choice((1,2))
+        # if ac == 1:
+        #     aircraft_lst.append(ac_a)
+        #     id_a += 1
+        # else:
+        #     aircraft_lst.append(ac_d)
+        #     id_d += 1
 
-        ac = random.choice((1,2))
-        if ac == 1:
-            aircraft_lst.append(ac_a)
-            id_a += 1
-        else:
-            aircraft_lst.append(ac_d)
-            id_d += 1
+    if t == 1:
+        ac_a = Aircraft( id , 'A', 37, 36, t, nodes_dict)  # As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
+        ac_d = Aircraft(id, 'D', 36, 37, t, nodes_dict)  # As an example we will create one aicraft arriving at node 36 with the goal of reaching node 37
+        aircraft_lst.append(ac_a)
+        id += 1
+        aircraft_lst.append(ac_d)
+        id += 1
     
     #Do planning 
     if planner == "Independent":     
         #if t == 1: #(Hint: Think about the condition that triggers (re)planning) 
         run_independent_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t)
     elif planner == "Prioritized":
-        run_prioritized_planner()
+        run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t)
     elif planner == "CBS":
         run_CBS()
     #elif planner == -> you may introduce other planners here
