@@ -145,7 +145,7 @@ class Aircraft(object):
         start_time = timer.time()
         result = []
         constraints = []
-        constraints = [{'aircraft': 1, 'loc': [(4.0, 3.0)], 'timestep': 5.0}]
+        constraints = [{'aircraft': 1, 'node': [14], 'timestep': 5.0}]
 
         self.num_of_agents = 2
         if self.status == "taxiing":

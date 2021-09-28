@@ -27,7 +27,7 @@ planner = "Prioritized" #choose which planner to use (currently only Independent
 #Visualization (can also be changed)
 plot_graph = False    #show graph representation in NetworkX
 visualization = True        #pygame visualization
-visualization_speed = 0.5 #set at 0.1 as default
+visualization_speed = 0.1  #set at 0.1 as default
 
 #%%Function definitions
 def import_layout(nodes_file, edges_file):
@@ -157,10 +157,10 @@ time_end = simulation_time
 dt = 0.5 #should be factor of 0.5 (0.5/dt should be integer)
 clock = pg.time.Clock()
 t = 0
-id = 1
+id = 0
 
 print("Simulation Started")
-t_list = [1,2,3,4,5,6,7,8,9,10]
+t_list = [1]
 while running:
     t = round(t,2)
     
@@ -185,7 +185,7 @@ while running:
         
       
     #Spawn aircraft for this timestep (use for example a random process)
-    # if t in t_list:
+    if t in t_list:
 
         # ac_a = Aircraft(f'a{id_a}', 'A', random.choice((37,38)),random.choice((97,34, 35,36,98)),t , nodes_dict)
         # ac_d = Aircraft(f'd{id_d}', 'D', random.choice((97,34,35,36,98)),random.choice((1,2)),t , nodes_dict)
@@ -198,13 +198,13 @@ while running:
         #     aircraft_lst.append(ac_d)
         #     id_d += 1
 
-    if t == 1:
-        ac_a = Aircraft( id , 'A', 37, 36, t, nodes_dict)  # As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
-        ac_d = Aircraft(id, 'D', 36, 37, t, nodes_dict)  # As an example we will create one aicraft arriving at node 36 with the goal of reaching node 37
-        aircraft_lst.append(ac_a)
-        id += 1
-        aircraft_lst.append(ac_d)
-        id += 1
+        if t == 1:
+            ac_a = Aircraft(id, 'A', 37, 36, t, nodes_dict)  # As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
+            ac_d = Aircraft(id+1, 'D', 36, 37, t, nodes_dict)  # As an example we will create one aicraft arriving at node 36 with the goal of reaching node 37
+            aircraft_lst.append(ac_a)
+            id += 1
+            aircraft_lst.append(ac_d)
+            id += 1
     
     #Do planning 
     if planner == "Independent":     
