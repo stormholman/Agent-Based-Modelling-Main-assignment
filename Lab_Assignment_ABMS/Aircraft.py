@@ -145,7 +145,7 @@ class Aircraft(object):
         start_time = timer.time()
         result = []
         constraints = []
-        # constraints = [{'aircraft': 1, 'node': [14], 'timestep': 5.0}, {'aircraft': 1, 'node': [20], 'timestep': 5.0}, {'aircraft': 1, 'node': [25], 'timestep': 5.0}]
+        constraints = [{'aircraft': 1, 'node': [14], 'timestep': 5.0}, {'aircraft': 1, 'node': [20], 'timestep': 5.0}, {'aircraft': 1, 'node': [25], 'timestep': 5.0}]
 
         self.num_of_agents = 2 # determine based on active airplane list
         if self.status == "taxiing":
@@ -158,13 +158,13 @@ class Aircraft(object):
                     raise BaseException('No solutions')
                 result.append(path)
 
-            for y in range(self.num_of_agents):
-                for x in range(len(path)):
-                    if y != agent:
-                        constraints.append({'aircraft': y, 'node': [path[x][0]], 'timestep': x}) #vertex constraint
-                        if x > 0:
-                            constraints.append({'aircraft': y, 'node': [path[x][0], path[x-1][0]], 'timestep': x}) #edge constraint
-            print('constraints', constraints)
+            # for y in range(self.num_of_agents):
+            #     for x in range(len(path)):
+            #         if y != agent:
+            #             constraints.append({'aircraft': y, 'node': [path[x][0]], 'timestep': x}) #vertex constraint
+            #             if x > 0:
+            #                 constraints.append({'aircraft': y, 'node': [path[x][0], path[x-1][0]], 'timestep': x}) #edge constraint
+            # print('constraints', constraints)
 
             if success:
                 self.path_to_goal = path[1:]

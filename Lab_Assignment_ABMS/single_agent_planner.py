@@ -5,8 +5,44 @@ Consider functions in this file as supporting functions.
 
 import heapq
 import networkx as nx
-from prioritized import build_constraint_table
-from prioritized import is_constrained
+
+def build_constraint_table(constraints, agent):
+    ##############################
+    # Task 1.2/1.3: Return a table that constains the list of constraints of
+    #               the given agent for each time step. The table can be used
+    #               for a more efficient constraint violation check in the
+    #               is_constrained function.
+    constraint_table = {}
+    for i in constraints:
+        print('constraint', i)
+        if agent == i['aircraft']:
+            if i['timestep'] in constraint_table:
+                constraint_table[i['timestep']].append(i['node'])
+            else:
+                constraint_table[i['timestep']] = [i['node']]
+    print('constraint_table', constraint_table)
+    return constraint_table
+
+def is_constrained(curr_loc, next_loc, next_time, constraint_table):
+    ##############################
+    # Task 1.2/1.3: Check if a move from curr_loc to next_loc at time step next_time violates
+    #               any given constraint. For efficiency the constraints are indexed in a constraint_table
+    #               by time step, see build_constraint_table.
+    #curr_loc: just node, next_loc: just node, next_time: just time
+    if next_time not in constraint_table:
+        # print('nxtt in constrtabkle', True)
+        return False
+    constraintsarr = constraint_table[next_time]
+    for i in range(len(constraintsarr)):         #if the timestep is in the constraint_table, then we check the loc
+        constraint = constraintsarr[i]
+        if len(constraint) == 1:   #if the length of the loc is 1, then it is edge constraint
+            if constraint[0] == next_loc:
+                return True
+        elif len(constraint) == 2:      #if the length of the loc is 2, then it is vertex constraint
+            if constraint[0] == curr_loc and constraint[1] == next_loc:
+                return True
+    return False
+
 
 def calc_heuristics(graph, nodes_dict):
     """
