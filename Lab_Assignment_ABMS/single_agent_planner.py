@@ -106,6 +106,7 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
     goal_node_id = goal_node
     time_start = time_start
     constraint_table = build_constraint_table(constraints, agent)
+    # constraint_table = {5: [[14]]}
     print('constrainttable',constraint_table)
     # constaints_agents = {'agent':agent, 'constrain_table':constraint_table}
     # print('constraint_agents',constaints_agents)
