@@ -26,7 +26,7 @@ rectlist = []  # list to store the rectangular areas of the surface
 squared_display = True  # create squared display
 boundary_margin = 0.01  # add boundary margin to be sure that points are within boundary
 screen_percentage = 0.94  # percentage of pixels used in the critical axis
-horizontal_sep = 0.01  # percentage of pixels used in between dual screen
+horizontal_sep = 0.5  # percentage of pixels used in between dual screen
 
 red = (255, 0, 0)  # define colors
 lightgreen = (0, 255, 147)

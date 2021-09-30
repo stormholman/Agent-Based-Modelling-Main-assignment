@@ -200,11 +200,14 @@ while running:
 
         if t == 1:
             ac_a = Aircraft(id, 'A', 37, 36, t, nodes_dict)  # As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
-            ac_d = Aircraft(id+1, 'D', 36, 37, t, nodes_dict)  # As an example we will create one aicraft arriving at node 36 with the goal of reaching node 37
+            ac_d = Aircraft(id+1, 'D', 36, 37, t, nodes_dict)
+            # ac_e = Aircraft(id+2, 'D', 35, 38, t, nodes_dict)# As an example we will create one aicraft arriving at node 36 with the goal of reaching node 37
             aircraft_lst.append(ac_a)
             id += 1
             aircraft_lst.append(ac_d)
             id += 1
+            # aircraft_lst.append(ac_e)
+            # id += 1
     
     #Do planning 
     if planner == "Independent":     

@@ -14,14 +14,15 @@ def build_constraint_table(constraints, agent):
     #               is_constrained function.
     constraint_table = {}
     for i in constraints:
-        print('constraint', i)
+        # print('constraint', i)
         if agent == i['aircraft']:
             if i['timestep'] in constraint_table:
                 constraint_table[i['timestep']].append(i['node'])
             else:
                 constraint_table[i['timestep']] = [i['node']]
-    print('constraint_table', constraint_table)
+    # print('constraint_table', constraint_table)
     return constraint_table
+
 
 def is_constrained(curr_loc, next_loc, next_time, constraint_table):
     ##############################
@@ -105,6 +106,9 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
     goal_node_id = goal_node
     time_start = time_start
     constraint_table = build_constraint_table(constraints, agent)
+    print('constrainttable',constraint_table)
+    # constaints_agents = {'agent':agent, 'constrain_table':constraint_table}
+    # print('constraint_agents',constaints_agents)
 
     open_list = []
     closed_list = dict()
@@ -117,8 +121,12 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
         curr = pop_node(open_list)
         if curr['loc'] == goal_node_id and curr['timestep'] >= earliest_goal_timestep:
             return True, get_path(curr)
-        
-        for neighbor in nodes_dict[curr['loc']]["neighbors"]:
+
+        list_next_nodes = list(nodes_dict[curr['loc']]["neighbors"])
+        list_next_nodes.append(curr['loc'])
+        # print('currloc',curr['loc'])
+        # print('list next node', list_next_nodes)
+        for neighbor in list_next_nodes:
             # print('neighbor', neighbor)
             # print('currloc', curr['loc'])
             # implement constraints here!!
@@ -126,6 +134,12 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
             # print('nextloc', neighbor)
             # print('currtime',curr['timestep'])
             # print('timestep,curr['timestep'])
+            # if constaints_agents['agent'] == agent:
+            #     constraint_table = constaints_agents['constrain_table']
+            # else:
+            #     constraint_table = {}
+            # print('constrainttable',constraint_table)
+            print(is_constrained(curr['loc'], neighbor, curr['timestep'] + 0.5, constraint_table))
             if is_constrained(curr['loc'], neighbor, curr['timestep']+0.5, constraint_table):
                 continue
 
