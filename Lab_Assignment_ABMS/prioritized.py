@@ -9,16 +9,19 @@ def run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t)
     # start_time = timer.time()
     result = []
     constraints = []
-    constraints = [{'aircraft': 0, 'node': [14], 'timestep': 5.0}, {'aircraft': 0, 'node': [20], 'timestep': 5.0},
+    constraints = [{'aircraft': 1, 'node': [14], 'timestep': 5.0},{'aircraft': 0, 'node': [14], 'timestep': 5.0}, {'aircraft': 0, 'node': [20], 'timestep': 5.0},
                    {'aircraft': 0, 'node': [25], 'timestep': 5.0}]
+    ID = -1
  # node to which planning should be done
     for ac in aircraft_lst:
+        ID += 1
+        print('ID', ID)
         if ac.spawntime == t:
             start_node = ac.start  # node from which planning should be done
             goal_node = ac.goal
             ac.status = "taxiing"
             ac.position = nodes_dict[ac.start]["xy_pos"]
-            success, path = simple_single_agent_astar(nodes_dict, start_node, goal_node, heuristics, t, ac, constraints)
+            success, path = simple_single_agent_astar(nodes_dict, start_node, goal_node, heuristics, t, ID, constraints)
         # print('ac', ac)
             if path is None:
                 raise BaseException('No solutions')
