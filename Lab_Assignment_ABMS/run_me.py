@@ -27,7 +27,7 @@ planner = "Prioritized" #choose which planner to use (currently only Independent
 #Visualization (can also be changed)
 plot_graph = False    #show graph representation in NetworkX
 visualization = True        #pygame visualization
-visualization_speed = 0.5  #set at 0.1 as default
+visualization_speed = 0.3  #set at 0.1 as default
 
 #%%Function definitions
 def import_layout(nodes_file, edges_file):
@@ -157,10 +157,10 @@ time_end = simulation_time
 dt = 0.5 #should be factor of 0.5 (0.5/dt should be integer)
 clock = pg.time.Clock()
 t = 0
-id = 0
+id = -1
 
 print("Simulation Started")
-t_list = [1]
+t_list = [1,2,3,4,5,6,7,8,9]
 while running:
     t = round(t,2)
     
@@ -184,30 +184,49 @@ while running:
         timer.sleep(visualization_speed)
         
       
-    #Spawn aircraft for this timestep (use for example a random process)
+    # Spawn aircraft for this timestep (random process)
     if t in t_list:
-
-        # ac_a = Aircraft(f'a{id_a}', 'A', random.choice((37,38)),random.choice((97,34, 35,36,98)),t , nodes_dict)
-        # ac_d = Aircraft(f'd{id_d}', 'D', random.choice((97,34,35,36,98)),random.choice((1,2)),t , nodes_dict)
-        #
-        # ac = random.choice((1,2))
-        # if ac == 1:
-        #     aircraft_lst.append(ac_a)
-        #     id_a += 1
-        # else:
-        #     aircraft_lst.append(ac_d)
-        #     id_d += 1
-
-        if t == 1:
-            ac_a = Aircraft(id, 'A', 37, 36, t, nodes_dict)  # As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
-            ac_d = Aircraft(id+1, 'D', 36, 37, t, nodes_dict)
-            # ac_e = Aircraft(id+2, 'D', 35, 38, t, nodes_dict)# As an example we will create one aicraft arriving at node 36 with the goal of reaching node 37
+        ac = random.choice((1,2))
+        if ac == 1:
+            id += 1
+            ac_a = Aircraft(id, 'A', random.choice((37, 38)), random.choice((97, 34, 35, 36, 98)), t, nodes_dict)
+            print('id',id)
             aircraft_lst.append(ac_a)
+
+        else:
             id += 1
+            ac_d = Aircraft(id, 'D', random.choice((97, 34, 35, 36, 98)), random.choice((1, 2)), t, nodes_dict)
+            print('id', id)
             aircraft_lst.append(ac_d)
-            id += 1
-            # aircraft_lst.append(ac_e)
-            # id += 1
+
+    # Spawn aircraft for this timestep
+    # if t == 1:
+    #     # As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
+    #     id += 1
+    #     ac_a = Aircraft(id, 'A', 37, 36, t, nodes_dict)
+    #     aircraft_lst.append(ac_a)
+    #
+    #     id += 1
+    #     ac_d = Aircraft(id, 'D', 36, 37, t, nodes_dict)
+    #     aircraft_lst.append(ac_d)
+    #
+    #     id += 1
+    #     ac_e = Aircraft(id, 'D', 97, 2, t, nodes_dict)
+    #     aircraft_lst.append(ac_e)
+    #
+    #     id += 1
+    #     ac_f = Aircraft(id, 'D', 34, 1, t, nodes_dict)
+    #     aircraft_lst.append(ac_f)
+    #
+    #     id += 1
+    #     ac_g = Aircraft(id, 'D', 38, 1, t, nodes_dict)
+    #     aircraft_lst.append(ac_g)
+
+        # id += 1
+        # ac_h = Aircraft(id, 'D', 98, 1, t, nodes_dict)
+        # aircraft_lst.append(ac_h)
+
+
     
     #Do planning 
     if planner == "Independent":     

@@ -13,6 +13,7 @@ def build_constraint_table(constraints, agent):
     #               for a more efficient constraint violation check in the
     #               is_constrained function.
     constraint_table = {}
+    # print('constraints',constraints)
     for i in constraints:
         # print('constraint', i)
         if agent == i['aircraft']:
@@ -140,7 +141,7 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
             # else:
             #     constraint_table = {}
             # print('constrainttable',constraint_table)
-            print(is_constrained(curr['loc'], neighbor, curr['timestep'] + 0.5, constraint_table))
+
             if is_constrained(curr['loc'], neighbor, curr['timestep']+0.5, constraint_table):
                 continue
 
