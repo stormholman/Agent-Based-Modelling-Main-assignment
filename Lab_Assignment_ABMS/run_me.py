@@ -185,42 +185,42 @@ while running:
         
       
     # Spawn aircraft for this timestep (random process)
-    if t in t_list:
-        ac = random.choice((1,2))
-        if ac == 1:
-            id += 1
-            ac_a = Aircraft(id, 'A', random.choice((37, 38)), random.choice((97, 34, 35, 36, 98)), t, nodes_dict)
-            print('id',id)
-            aircraft_lst.append(ac_a)
-
-        else:
-            id += 1
-            ac_d = Aircraft(id, 'D', random.choice((97, 34, 35, 36, 98)), random.choice((1, 2)), t, nodes_dict)
-            print('id', id)
-            aircraft_lst.append(ac_d)
+    # if t in t_list:
+    #     ac = random.choice((1,2))
+    #     if ac == 1:
+    #         id += 1
+    #         ac_a = Aircraft(id, 'A', random.choice((37, 38)), random.choice((97, 34, 35, 36, 98)), t, nodes_dict)
+    #         print('id',id)
+    #         aircraft_lst.append(ac_a)
+    #
+    #     else:
+    #         id += 1
+    #         ac_d = Aircraft(id, 'D', random.choice((97, 34, 35, 36, 98)), random.choice((1, 2)), t, nodes_dict)
+    #         print('id', id)
+    #         aircraft_lst.append(ac_d)
 
     # Spawn aircraft for this timestep
-    # if t == 1:
-    #     # As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
-    #     id += 1
-    #     ac_a = Aircraft(id, 'A', 37, 36, t, nodes_dict)
-    #     aircraft_lst.append(ac_a)
-    #
-    #     id += 1
-    #     ac_d = Aircraft(id, 'D', 36, 37, t, nodes_dict)
-    #     aircraft_lst.append(ac_d)
-    #
-    #     id += 1
-    #     ac_e = Aircraft(id, 'D', 97, 2, t, nodes_dict)
-    #     aircraft_lst.append(ac_e)
-    #
-    #     id += 1
-    #     ac_f = Aircraft(id, 'D', 34, 1, t, nodes_dict)
-    #     aircraft_lst.append(ac_f)
-    #
-    #     id += 1
-    #     ac_g = Aircraft(id, 'D', 38, 1, t, nodes_dict)
-    #     aircraft_lst.append(ac_g)
+    if t == 1:
+        # As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
+        id += 1
+        ac_a = Aircraft(id, 'A', 37, 36, t, nodes_dict)
+        aircraft_lst.append(ac_a)
+
+        id += 1
+        ac_d = Aircraft(id, 'D', 36, 37, t, nodes_dict)
+        aircraft_lst.append(ac_d)
+
+        id += 1
+        ac_e = Aircraft(id, 'D', 97, 2, t, nodes_dict)
+        aircraft_lst.append(ac_e)
+
+        id += 1
+        ac_f = Aircraft(id, 'D', 34, 1, t, nodes_dict)
+        aircraft_lst.append(ac_f)
+
+        id += 1
+        ac_g = Aircraft(id, 'D', 38, 1, t, nodes_dict)
+        aircraft_lst.append(ac_g)
 
         # id += 1
         # ac_h = Aircraft(id, 'D', 98, 1, t, nodes_dict)

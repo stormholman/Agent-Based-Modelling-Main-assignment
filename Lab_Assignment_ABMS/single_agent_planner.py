@@ -125,7 +125,7 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
             return True, get_path(curr)
 
         list_next_nodes = list(nodes_dict[curr['loc']]["neighbors"])
-        list_next_nodes.append(curr['loc'])
+        # list_next_nodes.append(curr['loc'])
         # print('currloc',curr['loc'])
         # print('list next node', list_next_nodes)
         for neighbor in list_next_nodes:
