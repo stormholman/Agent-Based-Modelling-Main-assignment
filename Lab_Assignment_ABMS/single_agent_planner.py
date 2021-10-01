@@ -15,8 +15,9 @@ def build_constraint_table(constraints, agent):
     constraint_table = {}
     # print('constraints',constraints)
     for i in constraints:
-        # print('constraint', i)
-        if agent == i['aircraft']:
+        if i['aircraft'] == agent:
+            print('agent', agent)
+            print('i[aircraft]', i['aircraft'])
             if i['timestep'] in constraint_table:
                 constraint_table[i['timestep']].append(i['node'])
             else:
@@ -102,7 +103,6 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
         - success = True/False. True if path is found and False is no path is found
         - path = list of tuples with (loc, timestep) pairs -> example [(37, 1), (101, 2)]. Empty list if success == False.
     """
-    
     from_node_id = from_node
     goal_node_id = goal_node
     time_start = time_start
