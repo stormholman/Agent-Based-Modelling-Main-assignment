@@ -15,20 +15,21 @@ def run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t)
  # node to which planning should be done
     for ac in aircraft_lst:
         ID = ac.id
-        # print('ID', ID)
+        #think about for what aircraft you want to replan if an aircraft is added
+        #
         if ac.spawntime == t:
             start_node = ac.start  # node from which planning should be done
             goal_node = ac.goal
             ac.status = "taxiing"
             ac.position = nodes_dict[ac.start]["xy_pos"]
-            print('constraints', constraints)
+            # print('constraints', constraints)
 
             success, path = simple_single_agent_astar(nodes_dict, start_node, goal_node, heuristics, t, ID, constraints)
 
             if path is None:
                 raise BaseException('No solutions')
             result.append(path)
-            num_agents = 9
+            num_agents = 5
 
             if success:
                 ac.path_to_goal = path[1:]
@@ -44,10 +45,10 @@ def run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t)
             for y in range(num_agents):
                 for x in range(len(path)):
                     if y != ID: # implement priority constraints in here
-                        constraints.append({'aircraft': y, 'node': [path[x][0]], 'timestep': x}) #vertex constraint
+                        constraints.append({'aircraft': y, 'node': [path[x][0]], 'timestep': path[x][1]}) #vertex constraint
                         if x > 0:
-                            constraints.append({'aircraft': y, 'node': [path[x][0], path[x-1][0]], 'timestep': x}) #edge constraint
-            # print('constraints', constraints)
+                            constraints.append({'aircraft': y, 'node': [path[x][0], path[x-1][0]], 'timestep': path[x][1]}) #edge constraint
+            print('constraints', constraints)
 
         ac.CPU_time = timer.time() - start_time
         # print("CPU time (s):    {:.2f}".format(ac.CPU_time))
