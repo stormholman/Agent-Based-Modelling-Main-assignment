@@ -27,7 +27,7 @@ planner = "Prioritized" #choose which planner to use (currently only Independent
 #Visualization (can also be changed)
 plot_graph = False    #show graph representation in NetworkX
 visualization = True        #pygame visualization
-visualization_speed = 0.3  #set at 0.1 as default
+visualization_speed = 0.4  #set at 0.1 as default
 
 #%%Function definitions
 def import_layout(nodes_file, edges_file):
@@ -160,11 +160,16 @@ t = 0
 id = -1
 
 print("Simulation Started")
-t_list = [1,2,3,4,5,6,7,8,9]
+t_list = [1,2,3,4]
+
+
+constraints = []
+constraint_table_all = {}
+
 while running:
     t = round(t,2)
-    
-       
+
+
     #Check conditions for termination
     if t >= time_end or escape_pressed: 
         running = False
@@ -185,45 +190,49 @@ while running:
         
       
     # Spawn aircraft for this timestep (random process)
-    # if t in t_list:
-    #     ac = random.choice((1,2))
-    #     if ac == 1:
-    #         id += 1
-    #         ac_a = Aircraft(id, 'A', random.choice((37, 38)), random.choice((97, 34, 35, 36, 98)), t, nodes_dict)
-    #         print('id',id)
-    #         aircraft_lst.append(ac_a)
-    #
-    #     else:
-    #         id += 1
-    #         ac_d = Aircraft(id, 'D', random.choice((97, 34, 35, 36, 98)), random.choice((1, 2)), t, nodes_dict)
-    #         print('id', id)
-    #         aircraft_lst.append(ac_d)
+    if t in t_list:
+        ac = random.choice((1,2))
+        if ac == 1:
+            id += 1
+            ac_a = Aircraft(id, 'A', random.choice((37, 38)), random.choice((97, 34, 35, 36, 98)), t, nodes_dict)
+            # print('id',id)
+            aircraft_lst.append(ac_a)
+
+        else:
+            id += 1
+            ac_d = Aircraft(id, 'D', random.choice((97, 34, 35, 36, 98)), random.choice((1, 2)), t, nodes_dict)
+            # print('id', id)
+            aircraft_lst.append(ac_d)
 
     # Spawn aircraft for this timestep
-    if t == 1:
-        # As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
-        id += 1
-        ac_a = Aircraft(id, 'A', 37, 36, t, nodes_dict)
-        aircraft_lst.append(ac_a)
-
-        id += 1
-        ac_d = Aircraft(id, 'D', 36, 37, t, nodes_dict)
-        aircraft_lst.append(ac_d)
-
-        id += 1
-        ac_e = Aircraft(id, 'D', 97, 2, t, nodes_dict)
-        aircraft_lst.append(ac_e)
-
-        id += 1
-        ac_f = Aircraft(id, 'D', 34, 1, t, nodes_dict)
-        aircraft_lst.append(ac_f)
-
-        id += 1
-        ac_g = Aircraft(id, 'D', 38, 1, t, nodes_dict)
-        aircraft_lst.append(ac_g)
+    # if t == 1:
+    #     # As an example we will create one aicraft arriving at node 37 with the goal of reaching node 36
+    #     id += 1
+    #     ac_a = Aircraft(id, 'A', 37, 36, t, nodes_dict)
+    #     aircraft_lst.append(ac_a)
+    #
+    #     id += 1
+    #     ac_d = Aircraft(id, 'D', 36, 37, t, nodes_dict)
+    #     aircraft_lst.append(ac_d)
+    #
+    #     id += 1
+    #     ac_e = Aircraft(id, 'D', 97, 2, t, nodes_dict)
+    #     aircraft_lst.append(ac_e)
+    #
+    #     id += 1
+    #     ac_f = Aircraft(id, 'D', 34, 1, t, nodes_dict)
+    #     aircraft_lst.append(ac_f)
+    #
+    #     id += 1
+    #     ac_g = Aircraft(id, 'D', 38, 1, t, nodes_dict)
+    #     aircraft_lst.append(ac_g)
 
         # id += 1
         # ac_h = Aircraft(id, 'D', 98, 1, t, nodes_dict)
+        # aircraft_lst.append(ac_h)
+        #
+        # id += 1
+        # ac_h = Aircraft(id, 'D', 35, 1, t, nodes_dict)
         # aircraft_lst.append(ac_h)
 
 
@@ -233,7 +242,7 @@ while running:
         #if t == 1: #(Hint: Think about the condition that triggers (re)planning) 
         run_independent_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t)
     elif planner == "Prioritized":
-        run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t)
+        run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t, constraints, constraint_table_all)
     elif planner == "CBS":
         run_CBS()
     #elif planner == -> you may introduce other planners here
