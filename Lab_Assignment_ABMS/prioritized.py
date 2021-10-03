@@ -5,7 +5,20 @@ from single_agent_planner import simple_single_agent_astar
 import time as timer
 from single_agent_planner import build_constraint_table
 
-def run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t, constraints, constraint_table_all):
+def prioritized_aircraft_list(aircraft_list):
+    prio_aircraft_list = []
+    for ac in aircraft_list:
+        if ac.id == 'a_d':
+            prio_aircraft_list.append(ac)
+
+    for ac in aircraft_list:
+        if ac.id == 'a_a':
+            prio_aircraft_list.append(ac)
+    # print('prtlist', prio_aircraft_list)
+
+    return prio_aircraft_list
+
+def run_prioritized_planner(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_table_all):
     # print('alist', aircraft_lst)
     start_time = timer.time()
     result = []
@@ -15,9 +28,9 @@ def run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t,
 
  # node to which planning should be done
     num_agents = len(aircraft_lst)
-    # print('nvlieg',len(aircraft_lst))
+    # print('nvlieg',aircraft_lst)
 
-
+    # for ac in prioritized_aircraft_list(aircraft_lst):
     for ac in aircraft_lst:
 
         ID = ac.id
@@ -25,6 +38,7 @@ def run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t,
         #
         if ac.spawntime == t:
             start_node = ac.start  # node from which planning should be done
+            print('start_node agent', ID, start_node, 'time', t)
             goal_node = ac.goal
             ac.status = "taxiing"
             ac.position = nodes_dict[ac.start]["xy_pos"]
@@ -35,7 +49,7 @@ def run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t,
                 else:
                     constraint_table_all[i] = constraint_table[i]
 
-            # print('call agent', ID , constraint_table_all)
+            print('call agent', ID , constraint_table_all)
             success, path = simple_single_agent_astar(nodes_dict, start_node, goal_node, heuristics, t, constraint_table_all)
 
             if path is None:

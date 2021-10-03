@@ -21,7 +21,7 @@ nodes_file = "nodes.xlsx" #xlsx file with for each node: id, x_pos, y_pos, type
 edges_file = "edges.xlsx" #xlsx file with for each edge: from  (node), to (node), length
 
 #Parameters that can be changed:
-simulation_time = 20
+simulation_time = 30
 planner = "Prioritized" #choose which planner to use (currently only Independent is implemented)
 
 #Visualization (can also be changed)
@@ -160,7 +160,7 @@ t = 0
 id = -1
 
 print("Simulation Started")
-t_list = [1,2,3,4]
+t_list = [1,3,5,7,9,11,13,15,17,19]
 
 
 constraints = []
@@ -242,7 +242,7 @@ while running:
         #if t == 1: #(Hint: Think about the condition that triggers (re)planning) 
         run_independent_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t)
     elif planner == "Prioritized":
-        run_prioritized_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t, constraints, constraint_table_all)
+        run_prioritized_planner(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_table_all)
     elif planner == "CBS":
         run_CBS()
     #elif planner == -> you may introduce other planners here

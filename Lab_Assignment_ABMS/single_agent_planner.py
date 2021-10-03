@@ -87,7 +87,7 @@ def heuristicFinder(graph, start_node, goal_node):
     return path, path_length
 
 
-def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time_start, agent, constraints):
+def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time_start, constraint_table):
     # def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
     """
     Single agent A* search. Time start can only be the time that an agent is at a node.
@@ -106,9 +106,9 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
     from_node_id = from_node
     goal_node_id = goal_node
     time_start = time_start
-    constraint_table = build_constraint_table(constraints, agent)
+    # constraint_table = build_constraint_table(constraints, agent)
     # constraint_table = {5: [[14]]}
-    print('constrainttable',constraint_table)
+    # print('constrainttable',constraint_table)
     # constaints_agents = {'agent':agent, 'constrain_table':constraint_table}
     # print('constraint_agents',constaints_agents)
 
