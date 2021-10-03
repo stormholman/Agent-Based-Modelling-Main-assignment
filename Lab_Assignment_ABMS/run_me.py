@@ -27,7 +27,7 @@ planner = "Prioritized" #choose which planner to use (currently only Independent
 #Visualization (can also be changed)
 plot_graph = False    #show graph representation in NetworkX
 visualization = True        #pygame visualization
-visualization_speed = 0.4  #set at 0.1 as default
+visualization_speed = 0.5  #set at 0.1 as default
 
 #%%Function definitions
 def import_layout(nodes_file, edges_file):
@@ -158,9 +158,10 @@ dt = 0.5 #should be factor of 0.5 (0.5/dt should be integer)
 clock = pg.time.Clock()
 t = 0
 id = -1
+acc = 1
 
 print("Simulation Started")
-t_list = [1,3,5,7,9,11,13,15,17,19]
+t_list = [0,1,2,3,4,5,6,7,8,9,10,11,12]
 
 
 constraints = []
@@ -191,18 +192,20 @@ while running:
       
     # Spawn aircraft for this timestep (random process)
     if t in t_list:
-        ac = random.choice((1,2))
-        if ac == 1:
+
+        if acc % 2 == 0:
             id += 1
             ac_a = Aircraft(id, 'A', random.choice((37, 38)), random.choice((97, 34, 35, 36, 98)), t, nodes_dict)
             # print('id',id)
             aircraft_lst.append(ac_a)
+            acc += 1
 
         else:
             id += 1
             ac_d = Aircraft(id, 'D', random.choice((97, 34, 35, 36, 98)), random.choice((1, 2)), t, nodes_dict)
             # print('id', id)
             aircraft_lst.append(ac_d)
+            acc += 1
 
     # Spawn aircraft for this timestep
     # if t == 1:
