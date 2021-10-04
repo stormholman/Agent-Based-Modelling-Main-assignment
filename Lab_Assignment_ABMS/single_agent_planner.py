@@ -145,6 +145,10 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
             if is_constrained(curr['loc'], neighbor, curr['timestep']+0.5, constraint_table):
                 continue
 
+            # if neighbor == path
+
+
+
             child = {'loc': neighbor,
                     'g_val': curr['g_val'] + 0.5,
                     'h_val': heuristics[neighbor][goal_node_id],
