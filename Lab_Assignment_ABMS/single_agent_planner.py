@@ -125,9 +125,9 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
             return True, get_path(curr)
 
         list_next_nodes = list(nodes_dict[curr['loc']]["neighbors"])
-        # list_next_nodes.append(curr['loc'])
+        list_next_nodes.append(curr['loc'])
         # print('currloc',curr['loc'])
-        # print('list next node', list_next_nodes)
+        print('list next node', list_next_nodes)
         for neighbor in list_next_nodes:
             # print('neighbor', neighbor)
             # print('currloc', curr['loc'])
@@ -145,7 +145,14 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
             if is_constrained(curr['loc'], neighbor, curr['timestep']+0.5, constraint_table):
                 continue
 
-            # if neighbor == path
+            # if child_loc[1] >= len(my_map[0]) or child_loc[0] >= len(my_map):
+            #     continue
+            # if child_loc[1] < 0 or child_loc[0] < 0:
+            #     continue
+
+
+
+
 
 
 

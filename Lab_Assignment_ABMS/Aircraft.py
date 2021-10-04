@@ -2,6 +2,9 @@
 import math
 import time as timer
 
+from Lab_Assignment_ABMS.single_agent_planner import simple_single_agent_astar
+
+
 class Aircraft(object):
     """Aircraft class, should be used in the creation of new aircraft."""
 
@@ -81,8 +84,12 @@ class Aircraft(object):
         distance_to_move = self.speed*dt #distance to move in this timestep
   
         #Update position with rounded values
-        x = xy_to[0]-xy_from[0]
-        y = xy_to[1]-xy_from[1]
+        if xy_to[0] == xy_from[0] and xy_to[1] == xy_from[1]:
+            x = xy_from[0]
+            y = xy_from[1]
+        else:
+            x = xy_to[0]-xy_from[0]
+            y = xy_to[1]-xy_from[1]
         x_normalized = x / math.sqrt(x**2+y**2)
         y_normalized = y / math.sqrt(x**2+y**2)
         posx = round(self.position[0] + x_normalized * distance_to_move ,2) #round to prevent errors

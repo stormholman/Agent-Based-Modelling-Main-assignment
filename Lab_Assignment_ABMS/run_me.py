@@ -22,7 +22,7 @@ edges_file = "edges.xlsx" #xlsx file with for each edge: from  (node), to (node)
 
 #Parameters that can be changed:
 simulation_time = 30
-planner = "Prioritized" #choose which planner to use (currently only Independent is implemented)
+planner = "CBS" #choose which planner to use (currently only Independent is implemented)
 
 #Visualization (can also be changed)
 plot_graph = False    #show graph representation in NetworkX
@@ -161,7 +161,7 @@ id = -1
 acc = 1
 
 print("Simulation Started")
-t_list = [0,1,2,3,4,5,6,7,8,9,10,11,12]
+t_list = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
 
 
 constraints = []
@@ -243,18 +243,18 @@ while running:
     #Do planning 
     if planner == "Independent":     
         #if t == 1: #(Hint: Think about the condition that triggers (re)planning) 
-        run_independent_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t)
+        run_independent_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t, )
     elif planner == "Prioritized":
         run_prioritized_planner(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_table_all)
     elif planner == "CBS":
-        run_CBS()
+        run_CBS(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_table_all)
     #elif planner == -> you may introduce other planners here
     else:
         raise Exception("Planner:", planner, "is not defined.")
                        
     #Move the aircraft that are taxiing
     for ac in aircraft_lst: 
-        if ac.status == "taxiing": 
+        if ac.status == "taxiing":
             ac.move(dt, t)
                            
     t = t + dt
