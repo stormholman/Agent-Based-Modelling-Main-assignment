@@ -139,6 +139,7 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_gen
 
     # perform actions while there is still an open_list
     while len(open_list) != 0:
+        print("True")
         n = pop_node(open_list, num_of_expanded)
         #print('new node constraints ', n['constraints'])
         if len(n['collisions']) == 0:
@@ -146,6 +147,7 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_gen
 
         list_of_constraints = standard_splitting(n['collisions'][0])
         print('listconstr', list_of_constraints)
+        print("ncollisions", n['collisions'])
 
         # constructing new node Q
         for item in list_of_constraints:
