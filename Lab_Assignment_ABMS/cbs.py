@@ -117,62 +117,62 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_tab
             if path[0][1] != t:
                 raise Exception("Something is wrong with the timing of the path planning")
 
-        root['cost'] = get_sum_of_cost(root['paths'])
-        root['collisions'] = detect_collisions(root['paths'])
-        push_node(open_list, root, num_of_generated)
+    root['cost'] = get_sum_of_cost(root['paths'])
+    root['collisions'] = detect_collisions(root['paths'])
+    push_node(open_list, root, num_of_generated)
 
-        # Task 3.1: Testing
-        print(root['collisions'])
+    # Task 3.1: Testing
+    print(root['collisions'])
 
-        # Task 3.2: Testing
-        for collision in root['collisions']:
-            print(standard_splitting(collision))
+    # Task 3.2: Testing
+    for collision in root['collisions']:
+        print(standard_splitting(collision))
 
-        ##############################
-        # Task 3.3: High-Level Search
-        #           Repeat the following as long as the open list is not empty:
-        #             1. Get the next node from the open list (you can use self.pop_node()
-        #             2. If this node has no collision, return solution
-        #             3. Otherwise, choose the first collision and convert to a list of constraints (using your
-        #                standard_splitting function). Add a new child node to your open list for each constraint
-        #           Ensure to create a copy of any objects that your child nodes might inherit
-        #
+    ##############################
+    # Task 3.3: High-Level Search
+    #           Repeat the following as long as the open list is not empty:
+    #             1. Get the next node from the open list (you can use self.pop_node()
+    #             2. If this node has no collision, return solution
+    #             3. Otherwise, choose the first collision and convert to a list of constraints (using your
+    #                standard_splitting function). Add a new child node to your open list for each constraint
+    #           Ensure to create a copy of any objects that your child nodes might inherit
+    #
 
-        # perform actions while there is still an open_list
-        while len(open_list) != 0:
-            n = pop_node(open_list, num_of_expanded)
-            # print('new node constraints ', n['constraints'])
-            if len(n['collisions']) == 0:
-                return n['paths']
+    # perform actions while there is still an open_list
+    while len(open_list) != 0:
+        n = pop_node(open_list, num_of_expanded)
+        # print('new node constraints ', n['constraints'])
+        if len(n['collisions']) == 0:
+            return n['paths']
 
-            list_of_constraints = standard_splitting(n['collisions'][0])
+        list_of_constraints = standard_splitting(n['collisions'][0])
 
-            # constructing new node Q
-            for item in list_of_constraints:
-                Q = {'cost': list(),
-                     'constraints': list(),
-                     'paths': list(),
-                     'collisions': list()}
+        # constructing new node Q
+        for item in list_of_constraints:
+            Q = {'cost': list(),
+                 'constraints': list(),
+                 'paths': list(),
+                 'collisions': list()}
 
-                for x in n['constraints']:
-                    Q['constraints'].append(x)
-                Q['constraints'].append(item)
+            for x in n['constraints']:
+                Q['constraints'].append(x)
+            Q['constraints'].append(item)
 
-                for x in n['paths']:
-                    Q['paths'].append(x)
+            for x in n['paths']:
+                Q['paths'].append(x)
 
-                agent = item['agent']
-                path = simple_single_agent_astar(nodes_dict, start_node, goal_node, heuristics, t, Q['constraints'])
-                if path:
-                    Q["paths"][agent] = path
-                    Q['cost'] = get_sum_of_cost(Q['paths'])
-                    Q['collisions'] = detect_collisions(Q['paths'])
+            agent = item['agent']
+            path = simple_single_agent_astar(nodes_dict, start_node, goal_node, heuristics, t, Q['constraints'])
+            if path:
+                Q["paths"][agent] = path
+                Q['cost'] = get_sum_of_cost(Q['paths'])
+                Q['collisions'] = detect_collisions(Q['paths'])
 
-                    push_node(open_list, Q, num_of_generated)
+                push_node(open_list, Q, num_of_generated)
 
-        ac.start_time = timer.time()
-        ac.CPU_time = timer.time() - start_time
-        # print("CPU time (s):    {:.2f}".format(ac.CPU_time))
+    ac.start_time = timer.time()
+    ac.CPU_time = timer.time() - start_time
+    # print("CPU time (s):    {:.2f}".format(ac.CPU_time))
 
 
 
