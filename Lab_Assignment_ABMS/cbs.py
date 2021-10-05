@@ -31,9 +31,9 @@ def detect_collision(path1, path2):
     total_time = max(len(path1), len(path2))
     for time in range(total_time):
         if get_location(path2, time - 1) == get_location(path1, time) and get_location(path1, time -1) == get_location(path2, time) and time > 0:
-            col = {'loc' : [get_location(path2, time-1), get_location(path2, time)], 'timestep' : time} # edge col
+            col = {'node' : [get_location(path2, time-1), get_location(path2, time)], 'timestep' : time} # edge col
         if get_location(path1, time) == get_location(path2, time):
-            col = {'loc': [get_location(path1, time)], 'timestep': time} # vertex col
+            col = {'node': [get_location(path1, time)], 'timestep': time} # vertex col
     return col
 
 
@@ -43,14 +43,14 @@ def detect_collisions(paths):
     #           A collision can be represented as dictionary that contains the id of the two robots, the vertex or edge
     #           causing the collision, and the timestep at which the collision occurred.
     #           You should use your detect_collision function to find a collision between two robots.
-
+    print('paths', paths)
     num_agents = len(paths)
     list_col = []
     for first_agent in range(num_agents - 1):
         for sec_agent in range(first_agent + 1, num_agents):
             loc_col = detect_collision(paths[first_agent], paths[sec_agent])
             if loc_col:
-                list_col.append({'first_agent': first_agent, 'second_agent': sec_agent, 'loc': loc_col['loc'], 'timestep': loc_col['timestep']})
+                list_col.append({'first_agent': first_agent, 'second_agent': sec_agent, 'node': loc_col['node'], 'timestep': loc_col['timestep']})
     return list_col
 
 
@@ -64,24 +64,22 @@ def standard_splitting(col):
     #                          specified timestep, and the second constraint prevents the second agent to traverse the
     #                          specified edge at the specified timestep
     timestep = col['timestep']
-    location = col['loc']
+    location = col['node']
     if len(location) == 1: #vertex col
-        c1 = {'agent': col['first_agent'], 'loc': [location[0]], 'timestep': timestep}
-        c2 = {'agent': col['second_agent'], 'loc': [location[0]], 'timestep': timestep}
+        c1 = {'aircraft': col['first_agent'], 'node': [location[0]], 'timestep': timestep}
+        c2 = {'aircraft': col['second_agent'], 'node': [location[0]], 'timestep': timestep}
         # print('c1,c2', c1, c2)
         return [c1, c2]
 
     if len(location) > 1: #edge col
-        c1 = {'agent': col['first_agent'], 'loc': [location[1], location[0]], 'timestep': timestep}
-        c2 = {'agent': col['second_agent'], 'loc': [location[0], location[1]], 'timestep': timestep}
+        c1 = {'aircraft': col['first_agent'], 'node': [location[1], location[0]], 'timestep': timestep}
+        c2 = {'aircraft': col['second_agent'], 'node': [location[0], location[1]], 'timestep': timestep}
         print('c1,c2',c1,c2)
         return [c1, c2]
 
 
 def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_generated, num_of_expanded):
     start_time = timer.time()
-
-
     # Generate the root node
     # constraints   - list of constraints
     # paths         - list of paths, one for each agent
