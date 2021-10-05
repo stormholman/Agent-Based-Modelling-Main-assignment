@@ -15,7 +15,7 @@ def build_constraint_table(constraints, agent):
     constraint_table = {}
     # print('constraints',constraints)
     for i in constraints:
-        # print('constraint', i)
+        print('constraint', i)
         if agent == i['aircraft']:
             if i['timestep'] in constraint_table:
                 constraint_table[i['timestep']].append(i['node'])

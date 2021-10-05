@@ -66,14 +66,14 @@ def standard_splitting(col):
     timestep = col['timestep']
     location = col['loc']
     if len(location) == 1: #vertex col
-        c1 = {'agent': col['first_agent'], 'loc': [location[0]], 'timestep': timestep}
-        c2 = {'agent': col['second_agent'], 'loc': [location[0]], 'timestep': timestep}
+        c1 = {'aircraft': col['first_agent'], 'node': [location[0]], 'timestep': timestep}
+        c2 = {'aircraft': col['second_agent'], 'node': [location[0]], 'timestep': timestep}
         # print('c1,c2', c1, c2)
         return [c1, c2]
 
     if len(location) > 1: #edge col
-        c1 = {'agent': col['first_agent'], 'loc': [location[1], location[0]], 'timestep': timestep}
-        c2 = {'agent': col['second_agent'], 'loc': [location[0], location[1]], 'timestep': timestep}
+        c1 = {'aircraft': col['first_agent'], 'loc': [location[1], location[0]], 'timestep': timestep}
+        c2 = {'aircraft': col['second_agent'], 'loc': [location[0], location[1]], 'timestep': timestep}
         print('c1,c2',c1,c2)
         return [c1, c2]
 
@@ -161,7 +161,9 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_gen
             for x in n['paths']:
                 Q['paths'].append(x)
 
-            agent = item['agent']
+            print("qconstraints", Q['constraints'])
+
+            agent = item['aircraft']
             path = astar_CBS(nodes_dict, start_node, goal_node, heuristics, t, ID, Q['constraints'])
             if path:
                 Q["paths"][agent] = path
