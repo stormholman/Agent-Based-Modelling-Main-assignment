@@ -5,7 +5,20 @@ Implement CBS here!!
 import time as timer
 from Aircraft import Aircraft
 import heapq
-from single_agent_planner import get_location, simple_single_agent_astar, get_sum_of_cost, push_node, pop_node
+from single_agent_planner import get_location, simple_single_agent_astar, get_sum_of_cost
+
+
+def push_node(open_list, node, num_of_generated):
+    heapq.heappush(open_list, (node['cost'], len(node['collisions']), num_of_generated, node))
+    print("Generate node {}".format(num_of_generated))
+    num_of_generated += 1
+
+
+def pop_node(open_list, num_of_expanded):
+    _, _, id, node = heapq.heappop(open_list)
+    print("Expand node {}".format(id))
+    num_of_expanded += 1
+    return node
 
 def detect_collision(path1, path2):
     ##############################
@@ -65,6 +78,9 @@ def standard_splitting(col):
 
 def run_CBS(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_table_all):
     start_time = timer.time()
+    open_list = []
+    num_of_generated = 0
+    num_of_expanded = 0
 
     # Generate the root node
     # constraints   - list of constraints
@@ -103,7 +119,7 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_tab
 
         root['cost'] = get_sum_of_cost(root['paths'])
         root['collisions'] = detect_collisions(root['paths'])
-        push_node(root)
+        push_node(open_list, root, num_of_generated)
 
         # Task 3.1: Testing
         print(root['collisions'])
@@ -123,8 +139,8 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_tab
         #
 
         # perform actions while there is still an open_list
-        while len(ac.open_list) != 0:
-            n = pop_node()
+        while len(open_list) != 0:
+            n = pop_node(open_list, num_of_expanded)
             # print('new node constraints ', n['constraints'])
             if len(n['collisions']) == 0:
                 return n['paths']
@@ -152,7 +168,7 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_tab
                     Q['cost'] = get_sum_of_cost(Q['paths'])
                     Q['collisions'] = detect_collisions(Q['paths'])
 
-                    push_node(Q)
+                    push_node(open_list, Q, num_of_generated)
 
         ac.start_time = timer.time()
         ac.CPU_time = timer.time() - start_time
