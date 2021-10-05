@@ -8,13 +8,14 @@ from single_agent_planner import build_constraint_table
 def prioritized_aircraft_list(aircraft_list):
     prio_aircraft_list = []
     for ac in aircraft_list:
-        if ac.id == 'a_d':
+        if ac.type == 'A':
+            # print(ac.id)
             prio_aircraft_list.append(ac)
 
     for ac in aircraft_list:
-        if ac.id == 'a_a':
+        if ac.type == 'D':
+            # print(ac.id)
             prio_aircraft_list.append(ac)
-    # print('prtlist', prio_aircraft_list)
 
     return prio_aircraft_list
 
@@ -30,8 +31,8 @@ def run_prioritized_planner(aircraft_lst, nodes_dict, heuristics, t, constraints
     num_agents = len(aircraft_lst)
     # print('nvlieg',aircraft_lst)
 
-    # for ac in prioritized_aircraft_list(aircraft_lst):
-    for ac in aircraft_lst:
+    for ac in prioritized_aircraft_list(aircraft_lst):
+    # for ac in aircraft_lst:
 
         ID = ac.id
         #think about for what aircraft you want to replan if an aircraft is added

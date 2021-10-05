@@ -125,9 +125,9 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
             return True, get_path(curr)
 
         list_next_nodes = list(nodes_dict[curr['loc']]["neighbors"])
-        list_next_nodes.append(curr['loc'])
+        # list_next_nodes.append(curr['loc'])
         # print('currloc',curr['loc'])
-        print('list next node', list_next_nodes)
+        # print('list next node', list_next_nodes)
         for neighbor in list_next_nodes:
             # print('neighbor', neighbor)
             # print('currloc', curr['loc'])
@@ -149,12 +149,6 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
             #     continue
             # if child_loc[1] < 0 or child_loc[0] < 0:
             #     continue
-
-
-
-
-
-
 
             child = {'loc': neighbor,
                     'g_val': curr['g_val'] + 0.5,
@@ -182,6 +176,21 @@ def pop_node(open_list):
 def compare_nodes(n1, n2):
     """Return true if n1 is better than n2."""
     return n1['g_val'] + n1['h_val'] < n2['g_val'] + n2['h_val']
+
+
+def get_sum_of_cost(paths):
+    rst = 0
+    for path in paths:
+        rst += len(path) - 1
+    return rst
+
+def get_location(path, time):
+    if time < 0:
+        return path[0]
+    elif time < len(path):
+        return path[time]
+    else:
+        return path[-1]  # wait at the goal location
 
 def get_path(goal_node):
     """Construct path if goal node is reached"""

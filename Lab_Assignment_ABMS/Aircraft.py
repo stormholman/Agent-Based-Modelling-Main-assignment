@@ -67,7 +67,7 @@ class Aircraft(object):
             raise Exception("Invalid movement")
     
         self.heading = heading
-      
+
     def move(self, dt, t):   
         """
         Moves an aircraft between from_node and to_node and checks if to_node or goal is reached.

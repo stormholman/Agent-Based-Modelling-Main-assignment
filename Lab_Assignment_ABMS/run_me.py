@@ -158,11 +158,27 @@ dt = 0.5 #should be factor of 0.5 (0.5/dt should be integer)
 clock = pg.time.Clock()
 t = 0
 id = -1
+evodd = 1
+id_dummy = -1
 acc = 1
 
 print("Simulation Started")
-t_list = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
+t_list = [0,2,4,6,8,10,12,14]
+# Spawn aircraft for this timestep (random process)
+for i in range(t_list[-1]+1):
+    if evodd % 2 == 0:
+        id_dummy += 1
+        ac_a = Aircraft(id_dummy, 'A', random.choice((37, 38)), random.choice((97, 34, 35, 36, 98)), i, nodes_dict)
+        # print('id',id)
+        aircraft_lst.append(ac_a)
+        evodd += 1
 
+    else:
+        id_dummy += 1
+        ac_d = Aircraft(id_dummy, 'D', random.choice((97, 34, 35, 36, 98)), random.choice((1, 2)), i, nodes_dict)
+        # print('id', id)
+        aircraft_lst.append(ac_d)
+        evodd += 1
 
 constraints = []
 constraint_table_all = {}
@@ -170,6 +186,22 @@ constraint_table_all = {}
 while running:
     t = round(t,2)
 
+    # Spawn aircraft for this timestep (random process)
+    if t in t_list:
+
+        if acc % 2 == 0:
+            id += 1
+            ac_a = Aircraft(id, 'A', random.choice((37, 38)), random.choice((97, 34, 35, 36, 98)), t, nodes_dict)
+            # print('id',id)
+
+            acc += 1
+
+        else:
+            id += 1
+            ac_d = Aircraft(id, 'D', random.choice((97, 34, 35, 36, 98)), random.choice((1, 2)), t, nodes_dict)
+            # print('id', id)
+
+            acc += 1
 
     #Check conditions for termination
     if t >= time_end or escape_pressed: 
@@ -190,22 +222,7 @@ while running:
         timer.sleep(visualization_speed)
         
       
-    # Spawn aircraft for this timestep (random process)
-    if t in t_list:
 
-        if acc % 2 == 0:
-            id += 1
-            ac_a = Aircraft(id, 'A', random.choice((37, 38)), random.choice((97, 34, 35, 36, 98)), t, nodes_dict)
-            # print('id',id)
-            aircraft_lst.append(ac_a)
-            acc += 1
-
-        else:
-            id += 1
-            ac_d = Aircraft(id, 'D', random.choice((97, 34, 35, 36, 98)), random.choice((1, 2)), t, nodes_dict)
-            # print('id', id)
-            aircraft_lst.append(ac_d)
-            acc += 1
 
     # Spawn aircraft for this timestep
     # if t == 1:
