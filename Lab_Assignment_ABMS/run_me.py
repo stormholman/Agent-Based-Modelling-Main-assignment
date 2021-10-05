@@ -21,7 +21,7 @@ nodes_file = "nodes.xlsx" #xlsx file with for each node: id, x_pos, y_pos, type
 edges_file = "edges.xlsx" #xlsx file with for each edge: from  (node), to (node), length
 
 #Parameters that can be changed:
-simulation_time = 30
+simulation_time = 20
 planner = "CBS" #choose which planner to use (currently only Independent is implemented)
 
 #Visualization (can also be changed)
@@ -163,7 +163,7 @@ id_dummy = -1
 acc = 1
 
 print("Simulation Started")
-t_list = [0,2,4,6,8,10,12,14]
+t_list = [0,2,4,6,8]
 # Spawn aircraft for this timestep (random process)
 for i in range(t_list[-1]+1):
     if evodd % 2 == 0:
@@ -182,6 +182,13 @@ for i in range(t_list[-1]+1):
 
 constraints = []
 constraint_table_all = {}
+root = {'cost': 0,
+        'constraints': [],
+        'paths': [],
+        'collisions': []}
+open_list = []
+num_of_generated = 0
+num_of_expanded = 0
 
 while running:
     t = round(t,2)
@@ -264,7 +271,7 @@ while running:
     elif planner == "Prioritized":
         run_prioritized_planner(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_table_all)
     elif planner == "CBS":
-        run_CBS(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_table_all)
+        run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_generated, num_of_expanded)
     #elif planner == -> you may introduce other planners here
     else:
         raise Exception("Planner:", planner, "is not defined.")

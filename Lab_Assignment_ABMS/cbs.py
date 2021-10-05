@@ -5,7 +5,7 @@ Implement CBS here!!
 import time as timer
 from Aircraft import Aircraft
 import heapq
-from single_agent_planner import get_location, simple_single_agent_astar, get_sum_of_cost
+from single_agent_planner import get_location, astar_CBS, get_sum_of_cost
 
 
 def push_node(open_list, node, num_of_generated):
@@ -68,42 +68,41 @@ def standard_splitting(col):
     if len(location) == 1: #vertex col
         c1 = {'agent': col['first_agent'], 'loc': [location[0]], 'timestep': timestep}
         c2 = {'agent': col['second_agent'], 'loc': [location[0]], 'timestep': timestep}
+        # print('c1,c2', c1, c2)
         return [c1, c2]
 
     if len(location) > 1: #edge col
         c1 = {'agent': col['first_agent'], 'loc': [location[1], location[0]], 'timestep': timestep}
         c2 = {'agent': col['second_agent'], 'loc': [location[0], location[1]], 'timestep': timestep}
+        print('c1,c2',c1,c2)
         return [c1, c2]
 
 
-def run_CBS(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_table_all):
+def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_generated, num_of_expanded):
     start_time = timer.time()
-    open_list = []
-    num_of_generated = 0
-    num_of_expanded = 0
+
 
     # Generate the root node
     # constraints   - list of constraints
     # paths         - list of paths, one for each agent
     #               [[(x11, y11), (x12, y12), ...], [(x21, y21), (x22, y22), ...], ...]
     # collisions     - list of collisions in paths
-    root = {'cost': 0,
-            'constraints': [],
-            'paths': [],
-            'collisions': []}
+
     for ac in aircraft_lst:
         ID = ac.id
-
         if ac.spawntime == t:
             start_node = ac.start  # node from which planning should be done
-            print('start_node agent', ID, start_node, 'time', t)
+            # print('start_node agent', ID, start_node, 'time', t)
             goal_node = ac.goal
             ac.status = "taxiing"
             ac.position = nodes_dict[ac.start]["xy_pos"]
-            success, path = simple_single_agent_astar(nodes_dict, start_node, goal_node, heuristics, t, root['constraints'])
+            print('root constraints', root['constraints'])
+            success, path = astar_CBS(nodes_dict, start_node, goal_node, heuristics, t, ID, root['constraints'])
+
 
             if path is None:
                 raise BaseException('No solutions')
+            print('path', root['paths'])
             root['paths'].append(path)
 
             if success:
@@ -146,6 +145,7 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_tab
             return n['paths']
 
         list_of_constraints = standard_splitting(n['collisions'][0])
+        print('listconstr', list_of_constraints)
 
         # constructing new node Q
         for item in list_of_constraints:
@@ -162,7 +162,7 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_tab
                 Q['paths'].append(x)
 
             agent = item['agent']
-            path = simple_single_agent_astar(nodes_dict, start_node, goal_node, heuristics, t, Q['constraints'])
+            path = astar_CBS(nodes_dict, start_node, goal_node, heuristics, t, ID, Q['constraints'])
             if path:
                 Q["paths"][agent] = path
                 Q['cost'] = get_sum_of_cost(Q['paths'])
@@ -170,7 +170,7 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_tab
 
                 push_node(open_list, Q, num_of_generated)
 
-    ac.start_time = timer.time()
+    start_time = timer.time()
     ac.CPU_time = timer.time() - start_time
     # print("CPU time (s):    {:.2f}".format(ac.CPU_time))
 

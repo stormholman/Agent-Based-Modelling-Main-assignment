@@ -166,6 +166,86 @@ def simple_single_agent_astar(nodes_dict, from_node, goal_node, heuristics, time
     print("No path found, "+str(len(closed_list))+" nodes visited")
     return False, [] # Failed to find solutions
 
+
+def astar_CBS(nodes_dict, from_node, goal_node, heuristics, time_start, agent, constraints):
+    # def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
+    """
+    Single agent A* search. Time start can only be the time that an agent is at a node.
+    INPUT:
+        - nodes_dict = [dict] dictionary with nodes and node properties
+        - from_node = [int] node_id of node from which planning is done
+        - goal_node = [int] node_id of node to which planning is done
+        - heuristics = [dict] dict with shortest path distance between nodes. Dictionary in a dictionary. Key of first dict is fromnode and key in second dict is tonode.
+        - time_start = [float] planning start time.
+        - Hint: do you need more inputs?
+    RETURNS:
+        - success = True/False. True if path is found and False is no path is found
+        - path = list of tuples with (loc, timestep) pairs -> example [(37, 1), (101, 2)]. Empty list if success == False.
+    """
+
+    from_node_id = from_node
+    goal_node_id = goal_node
+    time_start = time_start
+    constraint_table = build_constraint_table(constraints, agent)
+    # constraint_table = {5: [[14]]}
+    # print('constrainttable',constraint_table)
+    # constaints_agents = {'agent':agent, 'constrain_table':constraint_table}
+    # print('constraint_agents',constaints_agents)
+
+    open_list = []
+    closed_list = dict()
+    earliest_goal_timestep = time_start
+    h_value = heuristics[from_node_id][goal_node_id]
+    root = {'loc': from_node_id, 'g_val': 0, 'h_val': h_value, 'parent': None, 'timestep': time_start}
+    push_node(open_list, root)
+    closed_list[(root['loc'], root['timestep'])] = root
+    while len(open_list) > 0:
+        curr = pop_node(open_list)
+        if curr['loc'] == goal_node_id and curr['timestep'] >= earliest_goal_timestep:
+            return True, get_path(curr)
+
+        list_next_nodes = list(nodes_dict[curr['loc']]["neighbors"])
+        # list_next_nodes.append(curr['loc'])
+        # print('currloc',curr['loc'])
+        # print('list next node', list_next_nodes)
+        for neighbor in list_next_nodes:
+            # print('neighbor', neighbor)
+            # print('currloc', curr['loc'])
+            # implement constraints here!!
+            # print('currloc', curr['loc'])
+            # print('nextloc', neighbor)
+            # print('currtime',curr['timestep'])
+            # print('timestep,curr['timestep'])
+            # if constaints_agents['agent'] == agent:
+            #     constraint_table = constaints_agents['constrain_table']
+            # else:
+            #     constraint_table = {}
+            # print('constrainttable',constraint_table)
+
+            if is_constrained(curr['loc'], neighbor, curr['timestep'] + 0.5, constraint_table):
+                continue
+
+            # if child_loc[1] >= len(my_map[0]) or child_loc[0] >= len(my_map):
+            #     continue
+            # if child_loc[1] < 0 or child_loc[0] < 0:
+            #     continue
+
+            child = {'loc': neighbor,
+                     'g_val': curr['g_val'] + 0.5,
+                     'h_val': heuristics[neighbor][goal_node_id],
+                     'parent': curr,
+                     'timestep': curr['timestep'] + 0.5}
+            if (child['loc'], child['timestep']) in closed_list:
+                existing_node = closed_list[(child['loc'], child['timestep'])]
+                if compare_nodes(child, existing_node):
+                    closed_list[(child['loc'], child['timestep'])] = child
+                    push_node(open_list, child)
+            else:
+                closed_list[(child['loc'], child['timestep'])] = child
+                push_node(open_list, child)
+    print("No path found, " + str(len(closed_list)) + " nodes visited")
+    return False, []  # Failed to find solutions
+
 def push_node(open_list, node):
     heapq.heappush(open_list, (node['g_val'] + node['h_val'], node['h_val'], node['loc'], node))
 
