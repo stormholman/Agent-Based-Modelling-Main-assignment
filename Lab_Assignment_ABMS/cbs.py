@@ -191,3 +191,7 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_gen
 
 
 
+
+
+
+
