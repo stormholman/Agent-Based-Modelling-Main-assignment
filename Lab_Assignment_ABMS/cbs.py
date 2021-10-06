@@ -7,6 +7,14 @@ from Aircraft import Aircraft
 import heapq
 from single_agent_planner import get_location, astar_CBS, get_sum_of_cost
 
+def seq(start, stop, step=1):
+    n = int(round((stop - start)/float(step)))
+    if n > 1:
+        return([start + step*i for i in range(n+1)])
+    elif n == 1:
+        return([start])
+    else:
+        return([])
 
 def push_node(open_list, node, num_of_generated):
     heapq.heappush(open_list, (node['cost'], len(node['collisions']), num_of_generated, node))
@@ -29,11 +37,19 @@ def detect_collision(path1, path2):
     #           You should use "get_location(path, t)" to get the location of a robot at time t.
     col = dict()
     total_time = max(len(path1), len(path2))
-    for time in range(total_time):
-        if get_location(path2, time - 1) == get_location(path1, time) and get_location(path1, time -1) == get_location(path2, time) and time > 0:
-            col = {'node': [get_location(path2, time-1), get_location(path2, time)], 'timestep': time} # edge col
+
+    for time in seq(0,total_time/2,0.5):
+        # print('t',time)
+        # print('getl1', get_location(path1, time)[0])
+        if get_location(path2, time - 0.5) == get_location(path1, time) and get_location(path1, time -0.5) == get_location(path2, time) and time > 0:
+        #     # print('col1',True)
+            col = {'node' : [get_location(path2, time-0.5), get_location(path2, time)], 'timestep' : time} # edge col
         if get_location(path1, time) == get_location(path2, time):
+        # if time == 5:
+            print('getloc', [get_location(path1, time)])
             col = {'node': [get_location(path1, time)], 'timestep': time} # vertex col
+            # print('col2', True)
+    # print('listcol', col)
     return col
 
 
@@ -43,7 +59,7 @@ def detect_collisions(paths):
     #           A collision can be represented as dictionary that contains the id of the two robots, the vertex or edge
     #           causing the collision, and the timestep at which the collision occurred.
     #           You should use your detect_collision function to find a collision between two robots.
-
+    # print('paths', paths)
     num_agents = len(paths)
     list_col = []
     for first_agent in range(num_agents - 1):
@@ -51,6 +67,7 @@ def detect_collisions(paths):
             loc_col = detect_collision(paths[first_agent], paths[sec_agent])
             if loc_col:
                 list_col.append({'first_agent': first_agent, 'second_agent': sec_agent, 'node': loc_col['node'], 'timestep': loc_col['timestep']})
+    # print('listcol', list_col)
     return list_col
 
 
@@ -80,8 +97,6 @@ def standard_splitting(col):
 
 def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_generated, num_of_expanded):
     start_time = timer.time()
-
-
     # Generate the root node
     # constraints   - list of constraints
     # paths         - list of paths, one for each agent
@@ -121,11 +136,11 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_gen
     push_node(open_list, root, num_of_generated)
 
     # Task 3.1: Testing
-    print(root['collisions'])
+    # print(root['collisions'])
 
     # Task 3.2: Testing
-    for collision in root['collisions']:
-        print(standard_splitting(collision))
+    # for collision in root['collisions']:
+        # print(standard_splitting(collision))
 
     ##############################
     # Task 3.3: High-Level Search
@@ -139,15 +154,13 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_gen
 
     # perform actions while there is still an open_list
     while len(open_list) != 0:
-        print("True")
         n = pop_node(open_list, num_of_expanded)
-        #print('new node constraints ', n['constraints'])
+        # print('new node constraints ', n['constraints'])
         if len(n['collisions']) == 0:
             return n['paths']
 
         list_of_constraints = standard_splitting(n['collisions'][0])
         print('listconstr', list_of_constraints)
-        print("ncollisions", n['collisions'])
 
         # constructing new node Q
         for item in list_of_constraints:
@@ -157,14 +170,11 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_gen
                  'collisions': list()}
 
             for x in n['constraints']:
-                print("x", x)
                 Q['constraints'].append(x)
             Q['constraints'].append(item)
 
             for x in n['paths']:
                 Q['paths'].append(x)
-
-            print("qconstraints", Q['constraints'])
 
             agent = item['aircraft']
             path = astar_CBS(nodes_dict, start_node, goal_node, heuristics, t, ID, Q['constraints'])
@@ -178,6 +188,10 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_gen
     start_time = timer.time()
     ac.CPU_time = timer.time() - start_time
     # print("CPU time (s):    {:.2f}".format(ac.CPU_time))
+
+
+
+
 
 
 
