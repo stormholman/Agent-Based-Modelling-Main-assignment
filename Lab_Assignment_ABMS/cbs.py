@@ -7,6 +7,14 @@ from Aircraft import Aircraft
 import heapq
 from single_agent_planner import get_location, astar_CBS, get_sum_of_cost
 
+def seq(start, stop, step=1):
+    n = int(round((stop - start)/float(step)))
+    if n > 1:
+        return([start + step*i for i in range(n+1)])
+    elif n == 1:
+        return([start])
+    else:
+        return([])
 
 def push_node(open_list, node, num_of_generated):
     heapq.heappush(open_list, (node['cost'], len(node['collisions']), num_of_generated, node))
@@ -30,12 +38,15 @@ def detect_collision(path1, path2):
     col = dict()
     total_time = max(len(path1), len(path2))
 
-    for time in range(total_time):
+    for time in seq(0,total_time/2,0.5):
+        # print('t',time)
         # print('getl1', get_location(path1, time)[0])
-        if get_location(path2, time - 1) == get_location(path1, time) and get_location(path1, time -1) == get_location(path2, time) and time > 0:
-            # print('col1',True)
-            col = {'node' : [get_location(path2, time-1), get_location(path2, time)], 'timestep' : time} # edge col
+        if get_location(path2, time - 0.5) == get_location(path1, time) and get_location(path1, time -0.5) == get_location(path2, time) and time > 0:
+        #     # print('col1',True)
+            col = {'node' : [get_location(path2, time-0.5), get_location(path2, time)], 'timestep' : time} # edge col
         if get_location(path1, time) == get_location(path2, time):
+        # if time == 5:
+            print('getloc', [get_location(path1, time)])
             col = {'node': [get_location(path1, time)], 'timestep': time} # vertex col
             # print('col2', True)
     # print('listcol', col)

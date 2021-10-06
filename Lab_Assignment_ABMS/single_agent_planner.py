@@ -268,7 +268,11 @@ def get_location(path, time):
     if time < 0:
         return path[0][0]
     elif time < len(path):
-        return path[time][0]
+        for i in path:
+            print('times', i[1])
+            print('time', time)
+            if i[1] == time:
+                return i[0]
     else:
         return path[-1][0] # wait at the goal location
 
