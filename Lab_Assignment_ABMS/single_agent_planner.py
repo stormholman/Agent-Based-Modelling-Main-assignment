@@ -15,7 +15,7 @@ def build_constraint_table(constraints, agent):
     constraint_table = {}
     # print('constraints',constraints)
     for i in constraints:
-        print('constraint', i)
+        # print('constraint', i)
         if agent == i['aircraft']:
             if i['timestep'] in constraint_table:
                 constraint_table[i['timestep']].append(i['node'])
@@ -266,11 +266,15 @@ def get_sum_of_cost(paths):
 
 def get_location(path, time):
     if time < 0:
-        return path[0]
+        return path[0][0]
     elif time < len(path):
-        return path[time]
+        for i in path:
+            print('times', i[1])
+            print('time', time)
+            if i[1] == time:
+                return i[0]
     else:
-        return path[-1]  # wait at the goal location
+        return path[-1][0] # wait at the goal location
 
 def get_path(goal_node):
     """Construct path if goal node is reached"""
