@@ -46,7 +46,7 @@ def detect_collision(path1, path2):
             col = {'node' : [get_location(path2, time-0.5), get_location(path2, time)], 'timestep' : time} # edge col
         if get_location(path1, time) == get_location(path2, time):
         # if time == 5:
-            print('getloc', [get_location(path1, time)])
+        #     print('getloc', [get_location(path1, time)])
             col = {'node': [get_location(path1, time)], 'timestep': time} # vertex col
             # print('col2', True)
     # print('listcol', col)
@@ -95,13 +95,16 @@ def standard_splitting(col):
         return [c1, c2]
 
 
-def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_generated, num_of_expanded):
+def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root):
     start_time = timer.time()
     # Generate the root node
     # constraints   - list of constraints
     # paths         - list of paths, one for each agent
     #               [[(x11, y11), (x12, y12), ...], [(x21, y21), (x22, y22), ...], ...]
     # collisions     - list of collisions in paths
+    open_list = []
+    num_of_generated = 0
+    num_of_expanded = 0
 
     for ac in aircraft_lst:
         ID = ac.id
@@ -134,6 +137,7 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_gen
     root['cost'] = get_sum_of_cost(root['paths'])
     root['collisions'] = detect_collisions(root['paths'])
     push_node(open_list, root, num_of_generated)
+    print('openlist',open_list)
 
     # Task 3.1: Testing
     # print(root['collisions'])
@@ -154,12 +158,12 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_gen
 
     # perform actions while there is still an open_list
     while len(open_list) != 0:
-        n = pop_node(open_list, num_of_expanded)
-        # print('new node constraints ', n['constraints'])
-        if len(n['collisions']) == 0:
-            return n['paths']
+        P = pop_node(open_list, num_of_expanded)
+        print('new node constraints ', P['constraints'])
+        if len(P['collisions']) == 0:
+            return P['paths']
 
-        list_of_constraints = standard_splitting(n['collisions'][0])
+        list_of_constraints = standard_splitting(P['collisions'][0])
         print('listconstr', list_of_constraints)
 
         # constructing new node Q
@@ -169,15 +173,15 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_gen
                  'paths': list(),
                  'collisions': list()}
 
-            for x in n['constraints']:
+            for x in P['constraints']:
                 Q['constraints'].append(x)
             Q['constraints'].append(item)
 
-            for x in n['paths']:
+            for x in P['paths']:
                 Q['paths'].append(x)
 
             agent = item['aircraft']
-            path = astar_CBS(nodes_dict, start_node, goal_node, heuristics, t, ID, Q['constraints'])
+            path = astar_CBS(nodes_dict, start_node, goal_node, heuristics, t, ID, Q['constraints'])[-1]
             if path:
                 Q["paths"][agent] = path
                 Q['cost'] = get_sum_of_cost(Q['paths'])

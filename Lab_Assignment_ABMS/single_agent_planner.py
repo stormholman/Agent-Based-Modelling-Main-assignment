@@ -265,16 +265,18 @@ def get_sum_of_cost(paths):
     return rst
 
 def get_location(path, time):
+    # print('pq',path)
+    # print('plsa',path[-1][1]) #print time span
     if time < 0:
-        return path[0][0]
-    elif time < len(path):
+        return path[0]
+    elif time < path[-1][1]:
         for i in path:
-            print('times', i[1])
-            print('time', time)
+            # print('times', i[1])
+            # print('time', time)
             if i[1] == time:
-                return i[0]
+                return i
     else:
-        return path[-1][0] # wait at the goal location
+        return path[-1] # wait at the goal location
 
 def get_path(goal_node):
     """Construct path if goal node is reached"""

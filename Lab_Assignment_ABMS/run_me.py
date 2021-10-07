@@ -186,9 +186,7 @@ root = {'cost': 0,
         'constraints': [],
         'paths': [],
         'collisions': []}
-open_list = []
-num_of_generated = 0
-num_of_expanded = 0
+
 
 while running:
     t = round(t,2)
@@ -271,7 +269,7 @@ while running:
     elif planner == "Prioritized":
         run_prioritized_planner(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_table_all)
     elif planner == "CBS":
-        run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_generated, num_of_expanded)
+        run_CBS(aircraft_lst, nodes_dict, heuristics, t, root)
     #elif planner == -> you may introduce other planners here
     else:
         raise Exception("Planner:", planner, "is not defined.")
