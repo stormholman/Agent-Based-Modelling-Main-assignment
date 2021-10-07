@@ -163,7 +163,7 @@ id_dummy = -1
 acc = 1
 
 print("Simulation Started")
-t_list = [0,2,4,6,8]
+t_list = [0,2,4,6,8,10,12]
 # # Spawn aircraft for this timestep (random process)
 # for i in range(t_list[-1]+1):
 #     if evodd % 2 == 0:
@@ -186,7 +186,9 @@ root = {'cost': 0,
         'constraints': [],
         'paths': [],
         'collisions': []}
-
+open_list = []
+num_of_generated = 0
+num_of_expanded = 0
 
 while running:
     t = round(t,2)
@@ -260,16 +262,16 @@ while running:
         # ac_h = Aircraft(id, 'D', 35, 1, t, nodes_dict)
         # aircraft_lst.append(ac_h)
 
-
+#run CBS when an aircraft is spawned
     
     #Do planning 
     if planner == "Independent":     
         #if t == 1: #(Hint: Think about the condition that triggers (re)planning) 
-        run_independent_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t, )
+        run_independent_planner(aircraft_lst, nodes_dict, edges_dict, heuristics, t)
     elif planner == "Prioritized":
         run_prioritized_planner(aircraft_lst, nodes_dict, heuristics, t, constraints, constraint_table_all)
     elif planner == "CBS":
-        run_CBS(aircraft_lst, nodes_dict, heuristics, t, root)
+        run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_generated, num_of_expanded)
     #elif planner == -> you may introduce other planners here
     else:
         raise Exception("Planner:", planner, "is not defined.")

@@ -17,6 +17,10 @@ def seq(start, stop, step=1):
         return([])
 
 def push_node(open_list, node, num_of_generated):
+    print('psh node')
+    print('open list', open_list)
+    print('node',node)
+    print('num of generated', num_of_generated)
     heapq.heappush(open_list, (node['cost'], len(node['collisions']), num_of_generated, node))
     print("Generate node {}".format(num_of_generated))
     num_of_generated += 1
@@ -95,32 +99,30 @@ def standard_splitting(col):
         return [c1, c2]
 
 
-def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root):
-    start_time = timer.time()
+def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root, open_list, num_of_generated, num_of_expanded):
+    # start_time = timer.time()
     # Generate the root node
     # constraints   - list of constraints
     # paths         - list of paths, one for each agent
     #               [[(x11, y11), (x12, y12), ...], [(x21, y21), (x22, y22), ...], ...]
     # collisions     - list of collisions in paths
-    open_list = []
-    num_of_generated = 0
-    num_of_expanded = 0
+
 
     for ac in aircraft_lst:
         ID = ac.id
-        if ac.spawntime == t:
+        if ac.spawntime == t: #maybe not necessary
             start_node = ac.start  # node from which planning should be done
             # print('start_node agent', ID, start_node, 'time', t)
             goal_node = ac.goal
             ac.status = "taxiing"
             ac.position = nodes_dict[ac.start]["xy_pos"]
-            print('root constraints', root['constraints'])
+            # print('root constraints', root['constraints'])
             success, path = astar_CBS(nodes_dict, start_node, goal_node, heuristics, t, ID, root['constraints'])
 
 
             if path is None:
                 raise BaseException('No solutions')
-            print('path', root['paths'])
+            # print('path', root['paths'])
             root['paths'].append(path)
 
             if success:
@@ -137,7 +139,7 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root):
     root['cost'] = get_sum_of_cost(root['paths'])
     root['collisions'] = detect_collisions(root['paths'])
     push_node(open_list, root, num_of_generated)
-    print('openlist',open_list)
+    # print('openlist',open_list)
 
     # Task 3.1: Testing
     # print(root['collisions'])
@@ -159,12 +161,12 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root):
     # perform actions while there is still an open_list
     while len(open_list) != 0:
         P = pop_node(open_list, num_of_expanded)
-        print('new node constraints ', P['constraints'])
+        # print('new node constraints ', P['constraints'])
         if len(P['collisions']) == 0:
             return P['paths']
 
         list_of_constraints = standard_splitting(P['collisions'][0])
-        print('listconstr', list_of_constraints)
+        # print('listconstr', list_of_constraints)
 
         # constructing new node Q
         for item in list_of_constraints:
@@ -181,7 +183,8 @@ def run_CBS(aircraft_lst, nodes_dict, heuristics, t, root):
                 Q['paths'].append(x)
 
             agent = item['aircraft']
-            path = astar_CBS(nodes_dict, start_node, goal_node, heuristics, t, ID, Q['constraints'])[-1]
+            success, path = astar_CBS(nodes_dict, start_node, goal_node, heuristics, t, ID, Q['constraints'])
+
             if path:
                 Q["paths"][agent] = path
                 Q['cost'] = get_sum_of_cost(Q['paths'])

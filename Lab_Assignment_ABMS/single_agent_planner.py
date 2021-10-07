@@ -45,6 +45,25 @@ def is_constrained(curr_loc, next_loc, next_time, constraint_table):
                 return True
     return False
 
+def is_constrained_CBS(curr_loc, next_loc, next_time, constraint_table):
+    ##############################
+    # Task 1.2/1.3: Check if a move from curr_loc to next_loc at time step next_time violates
+    #               any given constraint. For efficiency the constraints are indexed in a constraint_table
+    #               by time step, see build_constraint_table.
+    #curr_loc: just node, next_loc: just node, next_time: just time
+    if next_time not in constraint_table:
+        # print('nxtt in constrtabkle', True)
+        return False
+    constraintsarr = constraint_table[next_time]
+    for i in range(len(constraintsarr)):         #if the timestep is in the constraint_table, then we check the loc
+        constraint = constraintsarr[i]
+        if len(constraint) == 1:   #if the length of the loc is 1, then it is edge constraint
+            if constraint[0][0] == next_loc:
+                return True
+        elif len(constraint) == 2:      #if the length of the loc is 2, then it is vertex constraint
+            if constraint[0][0] == curr_loc and constraint[1][0] == next_loc:
+                return True
+    return False
 
 def calc_heuristics(graph, nodes_dict):
     """
@@ -222,7 +241,7 @@ def astar_CBS(nodes_dict, from_node, goal_node, heuristics, time_start, agent, c
             #     constraint_table = {}
             # print('constrainttable',constraint_table)
 
-            if is_constrained(curr['loc'], neighbor, curr['timestep'] + 0.5, constraint_table):
+            if is_constrained_CBS(curr['loc'], neighbor, curr['timestep'] + 0.5, constraint_table):
                 continue
 
             # if child_loc[1] >= len(my_map[0]) or child_loc[0] >= len(my_map):
